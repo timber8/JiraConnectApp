@@ -21,7 +21,7 @@ app.get('/issues', async (request, response) => {
       "schema",
       "operations"
     ],
-    "jql": "project = CHK AND issuetype = Bug and cf[10122] = TST1 ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC",
+    "jql": "project = CHK AND issuetype = Bug AND status = Open AND cf[10122] = TST1 AND "Functional Set/s" = "Broker Maintenance" ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC",
     "maxResults": 1,
     "fieldsByKeys": false,
     "fields": [
