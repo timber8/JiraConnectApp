@@ -21,7 +21,7 @@ app.get('/issues', async (request, response) => {
       "schema",
       "operations"
     ],
-    "jql": "project = CHK AND issuetype = Bug AND status = Open AND cf[10122] = TST1 AND "Functional Set/s" = "Broker Maintenance" ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC",
+    "jql": "project = CHK AND issuetype = Bug AND status = Open AND cf[10122] = TST1 AND \\"Epic Link\\" = FSD-2 ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC",
     "maxResults": 1,
     "fieldsByKeys": false,
     "fields": [
@@ -52,8 +52,9 @@ app.get('/issues', async (request, response) => {
        'Response: ' + response_jira.statusCode + ' ' + response_jira.statusMessage
     );
     //console.log(JSON.parse(body).issues[0].fields.status);
-    //console.log(JSON.parse(body))
+    console.log(JSON.parse(body_jira))
     response.json(JSON.parse(body_jira));
+
  });
 
   // response.json(JSON.parse(bodyData));
