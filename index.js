@@ -6,9 +6,6 @@ var JiraParsingModule = require('./transformations');
 const fetch = require('node-fetch');
 const models = require("./models");
 
-
-
-
 var mymModuleInstance = new JiraRequestModule();
 var jiraParsingInstance = new JiraParsingModule();
 const app = express();
@@ -23,7 +20,7 @@ app.use(express.static('public'));
 app.use(express.json({ limit: '1mb' }));
 
 
-// App middleware
+// App middleware, Inject DB in the req struct
 app.use('/getHistoricalData', async (req, res, next) => {
   req.context = {
     models
@@ -59,18 +56,13 @@ async function updateHistoricalData() {
     .then(function(valArray) {
       var full_parsed_issues = [];
       valArray.forEach(result =>{
-        parsed_issues = jiraParsingInstance.parseIssues(JSON.parse(result));
+        parsed_issues = jiraParsingInstance.parseHistoricalIssues(JSON.parse(result), time_data.datetime);
         Array.prototype.push.apply(full_parsed_issues,parsed_issues);
       })
       console.log(full_parsed_issues.length);
-      const timestamp = Date.now();
-      issues_body.timestamp = timestamp;
-      
-      full_parsed_issues.forEach(issue => {
-        issue.SNAPSHOT_DATE = new Date();
-        models.issuesHistoricalData.issuesHistoricalDataDB.insert(issue);
-      });
-      
+      models.issuesHistoricalData.issuesHistoricalDataDB.insert(
+        {"DATE": time_data.datetime,
+        full_parsed_issues});
       console.log("Benfica12");
     })
     .catch((err) => {
@@ -82,4 +74,4 @@ async function updateHistoricalData() {
     console.log(err);
   });
 }
-setInterval(updateHistoricalData, 20000);
+//setInterval(updateHistoricalData, 20000);

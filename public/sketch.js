@@ -71,7 +71,7 @@ $("#renderBtn").click(
 
 
 // schedule the first invocation:
-setInterval(() => {
+/*setInterval(() => {
     console.log("Benfica 10");
     $.ajax({
       url: "http://localhost:3000/getAllDefects/FSD-2",
@@ -81,4 +81,4 @@ setInterval(() => {
          
       }
     });
-  }, 5000);
+  }, 5000);*/
