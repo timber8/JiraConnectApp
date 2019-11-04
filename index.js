@@ -1,10 +1,20 @@
 const express = require('express');
-const fetch = require('node-fetch');
-const requestJira = require('request');
+var routes = require("./routes");
 require('dotenv').config();
+var JiraRequestModule = require('./jira_issue_request');
+var JiraParsingModule = require('./transformations');
+const fetch = require('node-fetch');
+const models = require("./models");
 
+
+
+
+var mymModuleInstance = new JiraRequestModule();
+var jiraParsingInstance = new JiraParsingModule();
 const app = express();
 const port = process.env.PORT || 3000;
+
+//Start web server 
 app.listen(port, () => {
   console.log(`Starting server at ${port}`);
 });
@@ -12,50 +22,64 @@ app.listen(port, () => {
 app.use(express.static('public'));
 app.use(express.json({ limit: '1mb' }));
 
-app.get('/issues', async (request, response) => {
-  const jira_api_key = process.env.JIRA_API_KEY;
-  const jira_user = process.env.JIRA_USER.toString();
-  var bodyData = `{
-    "expand": [
-      "names",
-      "schema",
-      "operations"
-    ],
-    "jql": "project = CHK AND issuetype = Bug AND status = Open AND cf[10122] = TST1 AND \\"Epic Link\\" = FSD-2 ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC",
-    "maxResults": 1,
-    "fieldsByKeys": false,
-    "fields": [
-      "summary",
-      "status",
-      "assignee"
-    ],
-    "startAt": 0
-  }`;
-  
-  var options = {
-     method: 'POST',
-     url: 'https://dchelix.atlassian.net/rest/api/3/search',
-     auth: { username: process.env.JIRA_USER, password: process.env.JIRA_API_KEY },
-     headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-     },
-     body: bodyData
+
+// App middleware
+app.use('/getHistoricalData', async (req, res, next) => {
+  req.context = {
+    models
   };
-
-  console.log(jira_user);
-
-  
- requestJira(options, function (error, response_jira, body_jira) {
-    if (error) throw new Error(error);
-    console.log(
-       'Response: ' + response_jira.statusCode + ' ' + response_jira.statusMessage
-    );
-    //console.log(JSON.parse(body).issues[0].fields.status);
-    console.log(JSON.parse(body_jira))
-    response.json(JSON.parse(body_jira));
-
- });
-
-  // response.json(JSON.parse(bodyData));
+  next();
 });
+
+app.use('/getAllDefects', routes.getAllDefects);
+app.use('/getAllDefectInformation', routes.getaAllDefectInformation);
+app.use('/getHistoricalData', routes.getHistoricalData); 
+
+
+
+
+async function updateHistoricalData() {
+  const time_response = await fetch("http://worldtimeapi.org/api/timezone/Europe/Lisbon");
+  const time_data = await time_response.json();
+  console.log(new Date(time_data.datetime).getHours());
+  mymModuleInstance.getIssuesData()
+  .then((data) => {
+    console.log("Benfica11");
+    issues_body = JSON.parse(data);
+    var page= 0
+    let jira_payload = JSON.parse(data);
+    jira_total_issues = jira_payload.total;
+    n_issues_returned = jira_payload.issues.length;
+    jira_promises = []
+    while(n_issues_returned*page < jira_total_issues){
+      jira_promises.push(mymModuleInstance.getIssuesData(n_issues_returned*page))
+      page++;
+    }
+    Promise.all(jira_promises)
+    .then(function(valArray) {
+      var full_parsed_issues = [];
+      valArray.forEach(result =>{
+        parsed_issues = jiraParsingInstance.parseIssues(JSON.parse(result));
+        Array.prototype.push.apply(full_parsed_issues,parsed_issues);
+      })
+      console.log(full_parsed_issues.length);
+      const timestamp = Date.now();
+      issues_body.timestamp = timestamp;
+      
+      full_parsed_issues.forEach(issue => {
+        issue.SNAPSHOT_DATE = new Date();
+        models.issuesHistoricalData.issuesHistoricalDataDB.insert(issue);
+      });
+      
+      console.log("Benfica12");
+    })
+    .catch((err) => {
+      console.log(err)
+    });
+  })
+  .catch((err) => {
+    console.log("Benfica13");
+    console.log(err);
+  });
+}
+setInterval(updateHistoricalData, 20000);

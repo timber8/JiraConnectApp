@@ -2,3 +2,4 @@
 node_modules/
 database.db
 jira_request.js
+issuesHistoricalDataDB.db
