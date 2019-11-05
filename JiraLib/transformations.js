@@ -19,7 +19,7 @@ this.parseHistoricalIssue = function(issue, snashot_date){
     let payload = {
         DEFECT_ID: issue.key,
         EPIC: issue.fields.customfield_10013,
-        ASSIGNED: issue.fields.assignee ? issue.fields.assignee.name : null,
+        ASSIGNED: issue.fields.assignee ? issue.fields.assignee.displayName : null,
         STATUS: issue.fields.status ? issue.fields.status.name : null,
         SEVERITY: issue.fields.customfield_10076 ? issue.fields.customfield_10076.value : null,
         CREATED_DATE: issue.fields.customfield_10077,
@@ -38,8 +38,8 @@ this.parseHistoricalIssue = function(issue, snashot_date){
         STATUS: issue.fields.status ? issue.fields.status.name : null,
         SEVERITY: issue.fields.customfield_10076 ? issue.fields.customfield_10076.value : null, 
         CREATED_DATE: issue.fields.customfield_10077,
-        ASSIGNED: issue.fields.assignee ? issue.fields.assignee.name : null,
-        REPORTER: issue.fields.reporter ? issue.fields.reporter.name : null,
+        ASSIGNED: issue.fields.assignee ? issue.fields.assignee.displayName : null,
+        REPORTER: issue.fields.reporter ? issue.fields.reporter.displayName : null,
         ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null
     } 
 
