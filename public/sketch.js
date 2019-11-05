@@ -1,10 +1,10 @@
 
 async function getAllIssues(){
   console.log("teste");
-  const response = await fetch(`/issues`);
+  const response = await fetch(`/getAllDefects/FSD-2`);
   response_d = await response.json();
   console.log(response_d);
-  document.getElementById('totalCount').textContent = response_d.total;
+  document.getElementById('totalCount').textContent = response_d.n_results;
 };
 
 function float2dollar(value){
@@ -20,7 +20,7 @@ function renderChart(data, labels) {
       data: {
           labels: labels,
           datasets: [{
-              label: 'Issues',
+              label: 'Total number of Issues (All Functional Sets)',
               data: data,
               borderColor: 'rgba(75, 192, 192, 1)',
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -47,8 +47,8 @@ function getChartData() {
           var data = [];
           var labels = [];
           result.forEach(element => {
-            data.push(element.number_of_issues);
-            labels.push(element.timestamp);
+            data.push(element.issues.length);
+            labels.push(element.DATE);
           });
           console.log(result);
           /*data.push(result.thisWeek);

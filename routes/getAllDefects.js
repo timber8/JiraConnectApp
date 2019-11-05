@@ -1,6 +1,6 @@
 const express = require('express');
-var JiraRequestModule = require('../jira_issue_request');
-var JiraParsingModule = require('../transformations');
+var JiraRequestModule = require('../JiraLib/jira_issue_request');
+var JiraParsingModule = require('../JiraLib/transformations');
 
 const router = express.Router();
 var mymModuleInstance = new JiraRequestModule();
@@ -21,15 +21,15 @@ router.get('/', async (req, res) => {
         }
         Promise.all(jira_promises)
         .then(function(valArray) {
-          var full_parsed_issues = [];
+          var issues = [];
           valArray.forEach(result =>{
             parsed_issues = jiraParsingInstance.parseIssues(JSON.parse(result));
-            Array.prototype.push.apply(full_parsed_issues,parsed_issues);
+            Array.prototype.push.apply(issues,parsed_issues);
           })
-          console.log(full_parsed_issues.length);
+          console.log(issues.length);
           res.json({
-            n_results : full_parsed_issues.length,
-            full_parsed_issues});
+            n_results : issues.length,
+            issues});
         })
         .catch((err) => {
           console.log(err)
@@ -54,21 +54,21 @@ router.get('/:fsId', async (req, res) => {
         n_issues_returned = jira_payload.issues.length;
         jira_promises = []
         console.log(req.params.fsId);
-        while(n_issues_returned*page < jira_total_issues){
+        while((n_issues_returned*page < jira_total_issues) && n_issues_returned > 0){
           jira_promises.push(mymModuleInstance.getIssuesDataByFsId(req.params.fsId, n_issues_returned*page));
           page++;
         }
         Promise.all(jira_promises)
         .then(function(valArray) {
-          var full_parsed_issues = [];
+          var issues = [];
           valArray.forEach(result =>{
             parsed_issues = jiraParsingInstance.parseIssues(JSON.parse(result));
-            Array.prototype.push.apply(full_parsed_issues,parsed_issues);
+            Array.prototype.push.apply(issues,parsed_issues);
           })
-          console.log(full_parsed_issues.length);
+          console.log(issues.length);
           res.json({
-            n_results : full_parsed_issues.length,
-            full_parsed_issues});
+            n_results : issues.length,
+            issues});
         })
         .catch((err) => {
           console.log(err)

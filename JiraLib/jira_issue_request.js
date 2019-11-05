@@ -3,7 +3,6 @@ require('dotenv').config();
 
 function JiraRequestModule() {
 
-
   this.jql_query = "project = CHK AND issuetype = Bug AND status = Open AND cf[10122] = TST1 AND \"Epic Link\" = FSD-2 ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC"
 
   this.bodyDataConfig = function(jql_query, issue_number){
@@ -30,7 +29,6 @@ function JiraRequestModule() {
       "startAt": issue_number
     });
   }
-  
   
   this.options = function (bodyData) {
     return {

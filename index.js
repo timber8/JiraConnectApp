@@ -1,8 +1,8 @@
 const express = require('express');
 var routes = require("./routes");
 require('dotenv').config();
-var JiraRequestModule = require('./jira_issue_request');
-var JiraParsingModule = require('./transformations');
+var JiraRequestModule = require('./JiraLib/jira_issue_request');
+var JiraParsingModule = require('./JiraLib/transformations');
 const fetch = require('node-fetch');
 const models = require("./models");
 
@@ -17,7 +17,7 @@ app.listen(port, () => {
 });
 
 app.use(express.static('public'));
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '2mb' }));
 
 
 // App middleware, Inject DB in the req struct
@@ -31,9 +31,6 @@ app.use('/getHistoricalData', async (req, res, next) => {
 app.use('/getAllDefects', routes.getAllDefects);
 app.use('/getAllDefectInformation', routes.getaAllDefectInformation);
 app.use('/getHistoricalData', routes.getHistoricalData); 
-
-
-
 
 async function updateHistoricalData() {
   const time_response = await fetch("http://worldtimeapi.org/api/timezone/Europe/Lisbon");
@@ -54,15 +51,15 @@ async function updateHistoricalData() {
     }
     Promise.all(jira_promises)
     .then(function(valArray) {
-      var full_parsed_issues = [];
+      var issues = [];
       valArray.forEach(result =>{
         parsed_issues = jiraParsingInstance.parseHistoricalIssues(JSON.parse(result), time_data.datetime);
-        Array.prototype.push.apply(full_parsed_issues,parsed_issues);
+        Array.prototype.push.apply(issues,parsed_issues);
       })
-      console.log(full_parsed_issues.length);
+      console.log(issues.length);
       models.issuesHistoricalData.issuesHistoricalDataDB.insert(
         {"DATE": time_data.datetime,
-        full_parsed_issues});
+        issues});
       console.log("Benfica12");
     })
     .catch((err) => {
@@ -74,4 +71,4 @@ async function updateHistoricalData() {
     console.log(err);
   });
 }
-//setInterval(updateHistoricalData, 20000);
+setInterval(updateHistoricalData, 20000);
