@@ -53,7 +53,7 @@ function JiraRequestModule() {
     return requestJira(this.options(this.bodyDataConfig(jql_query, issue_number)));
   }
   
-  this.getPrediodicIssuesData = function(issue_number){
+  this.getPeriodicIssueData = function(issue_number){
     jql_query = "project = CHK AND issuetype = Bug ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC";
     return requestJira(this.options(this.bodyDataConfig(jql_query, issue_number)));
   }
