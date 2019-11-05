@@ -6,7 +6,7 @@ var JiraParsingModule = require('./JiraLib/transformations');
 const fetch = require('node-fetch');
 const models = require("./models");
 
-var mymModuleInstance = new JiraRequestModule();
+var jiraRequestModule = new JiraRequestModule();
 var jiraParsingInstance = new JiraParsingModule();
 const app = express();
 const port = process.env.PORT || 3000;
@@ -35,8 +35,10 @@ app.use('/getHistoricalData', routes.getHistoricalData);
 async function updateHistoricalData() {
   const time_response = await fetch("http://worldtimeapi.org/api/timezone/Europe/Lisbon");
   const time_data = await time_response.json();
+  // Insert Time constraint here
+  
   console.log(new Date(time_data.datetime).getHours());
-  mymModuleInstance.getIssuesData()
+  jiraRequestModule.getIssuesData(0)
   .then((data) => {
     console.log("Benfica11");
     issues_body = JSON.parse(data);
@@ -46,7 +48,7 @@ async function updateHistoricalData() {
     n_issues_returned = jira_payload.issues.length;
     jira_promises = []
     while(n_issues_returned*page < jira_total_issues){
-      jira_promises.push(mymModuleInstance.getIssuesData(n_issues_returned*page))
+      jira_promises.push(jiraRequestModule.getIssuesData(n_issues_returned*page))
       page++;
     }
     Promise.all(jira_promises)
