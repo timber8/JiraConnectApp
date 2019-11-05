@@ -3,11 +3,11 @@ var JiraRequestModule = require('../JiraLib/jira_issue_request');
 var JiraParsingModule = require('../JiraLib/transformations');
 
 const router = express.Router();
-var mymModuleInstance = new JiraRequestModule();
+var jiraRequestModule = new JiraRequestModule();
 var jiraParsingInstance = new JiraParsingModule();
 
 router.get('/', async (req, res) => {
-  mymModuleInstance.getIssuesData(0)
+  jiraRequestModule.getIssuesData(0)
     .then((data) => {
         var page= 0
         let jira_payload = JSON.parse(data);
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
         n_issues_returned = jira_payload.issues.length;
         jira_promises = []
         while(n_issues_returned*page < jira_total_issues){
-          jira_promises.push(mymModuleInstance.getIssuesData(n_issues_returned*page))
+          jira_promises.push(jiraRequestModule.getIssuesData(n_issues_returned*page))
           page++;
         }
         Promise.all(jira_promises)
