@@ -1,0 +1,192 @@
+.helix_legend {
+	height: 30px;
+	width:100%;
+	position: relative;
+	display: flex;
+	margin:auto;
+	justify-content: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.helix_label {
+	font-weight: 300;
+	font-size: 13px;
+	line-height: 14px;	
+	float: left;
+	margin-right: 9px;
+}
+.helix_label-end {
+	margin-right: 0px;
+}
+
+.helix_legend .kt-badge {
+	height: 10px;
+	width: 10px;
+	margin-right: 6px;
+	line-height: 15px;
+	margin-top: 2px;
+	float: left;
+}
+
+.helix_legend_item {
+	display: flex;
+	height: 20px;
+}
+
+.list_fs {
+	cursor: pointer;
+}
+
+.cont1ainer-top {
+	padding-top: 10px;
+	padding-right: 30px;
+	padding-left: 20px;
+}
+
+.conta1iner-top .aside-fix {
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.helix_pie_legend {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	font-size: 3rem;
+	font-weight: 100;
+	margin-bottom: 2.4rem;
+	color: #a2a5b9;
+}
+.badge-pill {
+	font-size: 0.95rem !important;
+}
+.kt-user-card-v2__desc {
+	line-height: 1.1rem;
+}
+.badge-fixed {
+    color: #fff;
+    background-color: rgb(100,220,210);
+}
+.badge-rejected {
+    color: rgb(255,50,120);
+    background-color: #eee;
+}
+.badge-fixing {
+    color: #fff;
+    background-color: rgb(254,200,100);
+}
+.helix_badge {
+	font-weight: 500;
+	padding: 0.2rem 0.6rem;
+	border-radius: 5px;
+}
+
+.helix_green {
+	background-color: rgba(29, 201, 183, 0.1);
+    color: #1dc9b7;
+}
+
+.helix_blue {
+	background-color: rgba(85, 120, 235, 0.1);
+	color: #5578eb;
+}
+.helix_blue2 {
+	background-color: rgba(5,170,240,0.1);
+	color: #5578eb;
+}
+.helix_red {
+	background-color: rgba(253, 57, 122, 0.1);
+    color: #fd397a;
+}
+
+.helix_d_open {
+	background-color: rgb(250,110,125);
+}
+.helix_d_fixed {
+	background-color: rgba(5,170,240,0.3);
+}
+.helix_d_testing {
+	background-color: rgba(5,170,240,0.6);
+}
+.helix_d_review {
+	background-color: rgba(5,170,240,0.9);
+}
+.helix_d_closed {
+	background-color: rgb(70,120,180);
+}
+.helix_d_rejected {
+	background-color: rgb(230,230,230);
+}
+.helix_left_side span {
+	margin-top: 5px;
+	line-height: 2.5rem;
+}
+.helix_defect_numbers .white span {
+	color: white !important;
+}
+.bg-gray {
+	background-color: #ddd !important;
+}
+.delivered {
+	font-size: 16px !important;
+	text-align: center;
+	margin-bottom: 2px;
+	margin-left: 5px;
+	margin-right: -5px;
+}
+
+.kt-datatable__head {
+	background-color: #f9fbfd;
+	border-top: 1px solid #edf2f9;
+}
+
+.tr_row_completed {
+	background-color: rgba(29, 201, 183, 0.08);
+}
+
+th.kt-datatable__cell > span {
+	text-transform: uppercase;
+	color:#6675a2 !important;
+	letter-spacing: 1px;
+	font-size: 12px;
+}
+.greener {
+	background-color:rgba(29, 201, 183, 0.2) !important;
+	color: #13995a !important;
+}
+.greener2 {
+	background-color:rgba(29, 201, 183, 0.3) !important;
+	color: #13995a !important;
+}
+
+th.kt-datatable__cell--sorted > span {
+	color:#5578eb !important;
+}
+.notstarted {
+	background-color: #f5f5f5 !important;
+	color: #656565 !important;	
+	cursor: text !important;
+}
+.btn-warning {
+	color: white !important;
+}
+
+#domain_pill span.badge-warning {
+	color: white !important;
+}
+
+.kt-widget-3--shadow {
+ background-color: #242939;
+} 

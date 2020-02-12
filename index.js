@@ -83,3 +83,4 @@ async function updateHistoricalData() {
 setInterval(updateHistoricalData, 3600000);
 //Run On start
 updateHistoricalData();
+

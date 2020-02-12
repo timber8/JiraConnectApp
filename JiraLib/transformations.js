@@ -7,9 +7,10 @@ this.parseHistoricalIssue = function(issue, snashot_date){
         DEFECT_ID: issue.key,
         EPIC: issue.fields.customfield_10013,
         ASSIGNED: issue.fields.assignee ? issue.fields.assignee.displayName : null,
-        STATUS: issue.fields.status ? issue.fields.status.name : null,
+        STATUS: issue.fields.status ? handleStatus(issue.fields.status.name) : null,
         SEVERITY: issue.fields.customfield_10076 ? issue.fields.customfield_10076.value : null,
-        ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null
+        ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null,
+        FS: issue.fields.customfield_10160
     } 
 
     return payload;
@@ -19,11 +20,13 @@ this.parseHistoricalIssue = function(issue, snashot_date){
     let payload = {
         DEFECT_ID: issue.key,
         EPIC: issue.fields.customfield_10013,
+        SUMMARY: issue.fields.summary,
         ASSIGNED: issue.fields.assignee ? issue.fields.assignee.displayName : null,
-        STATUS: issue.fields.status ? issue.fields.status.name : null,
+        STATUS: issue.fields.status ? handleStatus(issue.fields.status.name) : null,
         SEVERITY: issue.fields.customfield_10076 ? issue.fields.customfield_10076.value : null,
         CREATED_DATE: issue.fields.customfield_10077,
-        ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null
+        ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null,
+        FS: issue.fields.customfield_10160
     } 
 
     return payload;
@@ -35,12 +38,13 @@ this.parseHistoricalIssue = function(issue, snashot_date){
         SUMMARY: issue.fields.summary,
         DESCRIPTION: issue.fields.description,
         EPIC: issue.fields.customfield_10013,
-        STATUS: issue.fields.status ? issue.fields.status.name : null,
+        STATUS: issue.fields.status ? handleStatus(issue.fields.status.name) : null,
         SEVERITY: issue.fields.customfield_10076 ? issue.fields.customfield_10076.value : null, 
         CREATED_DATE: issue.fields.customfield_10077,
         ASSIGNED: issue.fields.assignee ? issue.fields.assignee.displayName : null,
         REPORTER: issue.fields.reporter ? issue.fields.reporter.displayName : null,
-        ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null
+        ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null,
+        FS: issue.fields.customfield_10160
     } 
 
     return payload;
@@ -74,6 +78,15 @@ this.parseHistoricalIssue = function(issue, snashot_date){
     return parsed_issues;
   }
   
+}
+
+function handleStatus(status) {
+  if (status != undefined) {
+    if (status == 'Failed') {
+      status = 'Reopen';
+    }
+  }
+  return status;
 }
 
 module.exports = JiraParsingModule;
