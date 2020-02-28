@@ -17,7 +17,7 @@ app.listen(port, () => {
 });
 
 //Front End Set Up
-app.use(express.static('public'));
+app.use(express.static('public/app')); 
 app.use(express.json({ limit: '2mb' }));
 
 
