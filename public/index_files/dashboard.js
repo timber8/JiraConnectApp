@@ -1,11 +1,10 @@
 //
 // Dashboard
 //
-require('dotenv').config();
+
 var allDefectsInfo;
 var recentOrdersInit;
 
-const port = process.env.PORT || 3000;
 function ExcelDateToJSDate(serial) {
    var utc_days  = Math.floor(serial - 25569);
    var utc_value = utc_days * 86400;                                        
@@ -1825,7 +1824,7 @@ function getAllDefects() {
         type: "GET",
         async: true,
         dataType: "json",
-        url: "http://localhost:"+port+"/getAllDefects",
+        url: "/getAllDefects",
         success: function(data){
             //console.log("Success", data);
             allDefects = data;
@@ -1842,7 +1841,7 @@ function getAllDefectsInfo() {
         type: "GET",
         async: true,
         dataType: "json",
-        url: "http://localhost:"+port+"/getAllDefectInformation",
+        url: "/getAllDefectInformation",
         success: function(data){
             //console.log("Success", data);
             allDefectsInfo = addTeam(data);    
@@ -1889,9 +1888,9 @@ function destroyChart(chartName) {
 
 function getDefectInfo(functional_set) {
     //console.log('before call');
-    var serviceUrl = "http://localhost:"+port+"/getAllDefects/"; 
+    var serviceUrl = "/getAllDefects/"; 
     if (functional_set != undefined) {
-      serviceUrl = "http://localhost:"+port+"/getAllDefects/fsName/"+functional_set;
+      serviceUrl = "/getAllDefects/fsName/"+functional_set;
     }
 
     hideCharts();
@@ -2150,7 +2149,7 @@ var HistDataChecked = false;
 function getHistoricalData() {
 
   $.ajax({
-      url: "http://localhost:3000/getHistoricalData",
+      url: "/getHistoricalData",
       async: false,
       success: function (result) {
           HistData = result;
