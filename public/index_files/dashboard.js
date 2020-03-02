@@ -1895,7 +1895,7 @@ function getDefectInfo(functional_set) {
 
     hideCharts();
 
-    if (online) {
+    if (true) {
        $.ajax({
           type: "GET",
           async: true,
