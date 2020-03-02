@@ -5,6 +5,7 @@
 var allDefectsInfo;
 var recentOrdersInit;
 
+const port = process.env.PORT || 3000;
 function ExcelDateToJSDate(serial) {
    var utc_days  = Math.floor(serial - 25569);
    var utc_value = utc_days * 86400;                                        
@@ -1824,7 +1825,7 @@ function getAllDefects() {
         type: "GET",
         async: true,
         dataType: "json",
-        url: "http://localhost:3000/getAllDefects",
+        url: "http://localhost:"+port+"/getAllDefects",
         success: function(data){
             //console.log("Success", data);
             allDefects = data;
@@ -1841,7 +1842,7 @@ function getAllDefectsInfo() {
         type: "GET",
         async: true,
         dataType: "json",
-        url: "http://localhost:3000/getAllDefectInformation",
+        url: "http://localhost:"+port+"/getAllDefectInformation",
         success: function(data){
             //console.log("Success", data);
             allDefectsInfo = addTeam(data);    
@@ -1888,9 +1889,9 @@ function destroyChart(chartName) {
 
 function getDefectInfo(functional_set) {
     //console.log('before call');
-    var serviceUrl = "http://localhost:3000/getAllDefects/"; 
+    var serviceUrl = "http://localhost:"+port+"/getAllDefects/"; 
     if (functional_set != undefined) {
-      serviceUrl = "http://localhost:3000/getAllDefects/fsName/"+functional_set;
+      serviceUrl = "http://localhost:"+port+"/getAllDefects/fsName/"+functional_set;
     }
 
     hideCharts();
