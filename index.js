@@ -5,16 +5,20 @@ var JiraRequestModule = require('./JiraLib/jira_issue_request');
 var JiraParsingModule = require('./JiraLib/transformations');
 const fetch = require('node-fetch');
 const models = require("./models");
+var cors = require('cors');
 
 var jiraRequestModule = new JiraRequestModule();
 var jiraParsingInstance = new JiraParsingModule();
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+app.use(cors())
 //Start web server 
 app.listen(port, () => {
   console.log(`Starting server at ${port}`);
 });
+
 
 //Front End Set Up
 app.use(express.static('public')); 
