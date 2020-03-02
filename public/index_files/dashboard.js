@@ -1,7 +1,7 @@
 //
 // Dashboard
 //
-
+require('dotenv').config();
 var allDefectsInfo;
 var recentOrdersInit;
 
