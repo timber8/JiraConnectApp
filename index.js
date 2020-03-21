@@ -81,11 +81,15 @@ async function updateHistoricalData() {
       models.issuesHistoricalData.issuesHistoricalDataMongoDB(
         function(dbCollection) { // successCallback
           // Updating issue data (1 for Day) record
-          dbCollection.updateOne({ DATE: str_date.substring(0,10) }, {"DATE": str_date.substring(0,10), issues}, { upsert: true }, function (err, numReplaced, upsert) {
-            console.log("Number of documents (Cloud DB) modified: " + numReplaced)
-          });
-        }, function(err) { // failureCallback
-            throw (err);
+         
+          try{
+            dbCollection.updateOne({ DATE: str_date.substring(0,10) },{$set: {"DATE": str_date.substring(0,10), issues}}, { upsert: true });
+            console.log("Record saved in the Cloud");
+          }catch (e){
+            console.log(e);
+          }
+          }, function(err) { // failureCallback
+              throw (err);
         }
       )
     })
