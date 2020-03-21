@@ -1824,7 +1824,7 @@ function getAllDefects() {
         type: "GET",
         async: true,
         dataType: "json",
-        url: "http://localhost:3000/getAllDefects",
+        url: "/getAllDefects",
         success: function(data){
             //console.log("Success", data);
             allDefects = data;
@@ -1841,7 +1841,7 @@ function getAllDefectsInfo() {
         type: "GET",
         async: true,
         dataType: "json",
-        url: "http://localhost:3000/getAllDefectInformation",
+        url: "/getAllDefectInformation",
         success: function(data){
             //console.log("Success", data);
             allDefectsInfo = addTeam(data);    
@@ -1888,14 +1888,14 @@ function destroyChart(chartName) {
 
 function getDefectInfo(functional_set) {
     //console.log('before call');
-    var serviceUrl = "http://localhost:3000/getAllDefects/"; 
+    var serviceUrl = "/getAllDefects/"; 
     if (functional_set != undefined) {
-      serviceUrl = "http://localhost:3000/getAllDefects/fsName/"+functional_set;
+      serviceUrl = "/getAllDefects/fsName/"+functional_set;
     }
 
     hideCharts();
 
-    if (online) {
+    if (true) {
        $.ajax({
           type: "GET",
           async: true,
@@ -2149,7 +2149,7 @@ var HistDataChecked = false;
 function getHistoricalData() {
 
   $.ajax({
-      url: "http://localhost:3000/getHistoricalData",
+      url: "/getHistoricalData",
       async: false,
       success: function (result) {
           HistData = result;

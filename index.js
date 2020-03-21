@@ -5,19 +5,23 @@ var JiraRequestModule = require('./JiraLib/jira_issue_request');
 var JiraParsingModule = require('./JiraLib/transformations');
 const fetch = require('node-fetch');
 const models = require("./models");
+var cors = require('cors');
 
 var jiraRequestModule = new JiraRequestModule();
 var jiraParsingInstance = new JiraParsingModule();
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+app.use(cors())
 //Start web server 
 app.listen(port, () => {
   console.log(`Starting server at ${port}`);
 });
 
+
 //Front End Set Up
-app.use(express.static('public'));
+app.use(express.static('public')); 
 app.use(express.json({ limit: '2mb' }));
 
 
@@ -39,7 +43,8 @@ app.use('/functionalSetInfo', async (req, res, next) => {
 app.use('/getAllDefects', routes.getAllDefects);
 app.use('/getAllDefectInformation', routes.getaAllDefectInformation);
 app.use('/getHistoricalData', routes.getHistoricalData); 
-app.use('/functionalSetInfo', routes.functionalSetInfo); 
+app.use('/functionalSetInfo', routes.functionalSetInfo);
+app.use('/getIssueChangelog', routes.getIssueChangelog);  
 
 async function updateHistoricalData() {
   const time_response = await fetch("http://worldtimeapi.org/api/timezone/Europe/Lisbon");
@@ -68,9 +73,21 @@ async function updateHistoricalData() {
       })
       var str_date = String(time_data.datetime)
       console.log("Current Date: " + str_date.substring(0,10));
+      // Local DB update
       models.issuesHistoricalData.issuesHistoricalDataDB.update({ DATE: str_date.substring(0,10) }, {"DATE": str_date.substring(0,10), issues}, { upsert: true }, function (err, numReplaced, upsert) {
-        console.log("Number of documents modified: " + numReplaced)
+        console.log("Number of documents (Local DB) modified: " + numReplaced)
       });
+      // Cloud DB update
+      models.issuesHistoricalData.issuesHistoricalDataMongoDB(
+        function(dbCollection) { // successCallback
+          // Updating issue data (1 for Day) record
+          dbCollection.updateOne({ DATE: str_date.substring(0,10) }, {"DATE": str_date.substring(0,10), issues}, { upsert: true }, function (err, numReplaced, upsert) {
+            console.log("Number of documents (Cloud DB) modified: " + numReplaced)
+          });
+        }, function(err) { // failureCallback
+            throw (err);
+        }
+      )
     })
     .catch((err) => {
       console.log(err)
@@ -80,6 +97,7 @@ async function updateHistoricalData() {
     console.log(err);
   });
 }
+
 setInterval(updateHistoricalData, 3600000);
 //Run On start
 updateHistoricalData();
