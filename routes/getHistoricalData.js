@@ -21,6 +21,7 @@ router.get('/', async (req, res) => {
       .limit(30)
       .toArray(function(err, result) {
           if (err) throw err;
+          console.log(result.length)
           res.json(result);
       });
     }, function(err) { // failureCallback

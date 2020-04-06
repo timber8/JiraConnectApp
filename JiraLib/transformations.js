@@ -26,6 +26,8 @@ this.parseHistoricalIssue = function(issue, snashot_date){
         SEVERITY: issue.fields.customfield_10076 ? issue.fields.customfield_10076.value : null,
         CREATED_DATE: issue.fields.customfield_10077,
         ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null,
+        DEFECT_CLASSIFICATION: issue.fields.customfield_10150 ? issue.fields.customfield_10150 : null,
+        DEFECT_FIXED_BY_TEAM: issue.fields.customfield_10149 ? issue.fields.customfield_10149 : null,
         FS: issue.fields.customfield_10160
     } 
 
@@ -44,9 +46,20 @@ this.parseHistoricalIssue = function(issue, snashot_date){
         ASSIGNED: issue.fields.assignee ? issue.fields.assignee.displayName : null,
         REPORTER: issue.fields.reporter ? issue.fields.reporter.displayName : null,
         ENVIROMENT: issue.fields.customfield_10122 && issue.fields.customfield_10122.length > 0 ? issue.fields.customfield_10122[0].value : null,
+        DEFECT_CLASSIFICATION: issue.fields.customfield_10150 ? issue.fields.customfield_10150 : null,
+        DEFECT_FIXED_BY_TEAM: issue.fields.customfield_10149 ? issue.fields.customfield_10149 : null,
         FS: issue.fields.customfield_10160
     } 
 
+    return payload;
+  }
+
+  this.parseIssuesChangeLog = function(parseIssuesChangeLog){
+    let payload = {
+      FIELD: parseIssuesChangeLog.field ? parseIssuesChangeLog.field :null,
+      BEFORE: parseIssuesChangeLog.fromString ? parseIssuesChangeLog.fromString : null,
+      AFTER: parseIssuesChangeLog.toString ? parseIssuesChangeLog.toString : null
+    }
     return payload;
   }
 
@@ -76,6 +89,18 @@ this.parseHistoricalIssue = function(issue, snashot_date){
           parsed_issues.push(parsed_issue);
     });
     return parsed_issues;
+  }
+
+  this.parseIssuesChangeLogs = function(jira_payload){
+    let parsed_changeLog = [];
+    jira_payload.values.forEach(changeLogIssue => {
+          changeLogIssue.items.forEach(itemChanged => {
+            if(itemChanged.field === "assignee" || itemChanged.field === "status"){
+              parsed_changeLog.push({DATE :changeLogIssue.created, ITEM: this.parseIssuesChangeLog(itemChanged)});
+            }
+          })
+    });
+    return parsed_changeLog;
   }
   
 }
