@@ -4,3 +4,4 @@ database.db
 jira_request.js
 issuesHistoricalDataDB.db
 functionalSetInfoDB.db
+config.json
