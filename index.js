@@ -44,7 +44,7 @@ app.post('/upload', function(req, res) {
       let rawdata = fs.readFileSync('config.json');
       console.log(JSON.parse(rawdata));
       // Cloud database insert here
-      
+
     res.json('Configuraion Uploaded!');
   });  
 }); 
