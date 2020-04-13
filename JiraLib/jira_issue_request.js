@@ -26,7 +26,9 @@ function JiraRequestModule() {
         "customfield_10160",
         "customfield_10122",
         "customfield_10160",
-        "customfield_10161"
+        "customfield_10161",
+        "customfield_10149",
+        "customfield_10150"
       ],
       "startAt": issue_number
     });
@@ -76,8 +78,12 @@ function JiraRequestModule() {
     return requestJira(this.options(this.bodyDataConfig(jql_query, issue_number)));
   }
 
-  this.getIssueChangelogData = function(issueId){
-    return requestJira(this.optionsGET(issueId));
+  this.getIssueChangelogData = function(issueId, index){
+    return new Promise (resolve => {
+      setTimeout(() => { 
+        resolve(requestJira( this.optionsGET(issueId)))
+      }, (50) * (index + 1))
+    });
   }
 } 
 

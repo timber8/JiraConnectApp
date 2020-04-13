@@ -282,7 +282,8 @@
                                 <h4 class="kt-menu__section-text">Other</h4>
                                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
-                            <li class="kt-menu__item " aria-haspopup="true"><a href="#" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-cogwheel-1"></i><span class="kt-menu__link-text">Settings</span></a></li>
+                            <li container-target="settings" page-title="Settings" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-cogwheel-1"></i><span class="kt-menu__link-text">Settings</span></a>
+                            </li>
                         </ul>
                         <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                             <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
@@ -378,95 +379,109 @@
                     <!-- begin:: Content -->
                     <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid" >
 
-
-
-
-<div id="defect_list" class="main_container" style="display:none">
-
-        <!-- begin:: Content -->
-        <div class="kt-container--fluid  kt-grid__item kt-grid__item--fluid">
-            
-            <div class="kt-portlet kt-portlet--mobile">
-                <div class="kt-portlet__head kt-portlet__head--lg" style="border-bottom: 0px;">
-                    <div class="kt-portlet__head-label">
-                        <h3 class="kt-portlet__head-title">Defect List </h3>
+                    
+                    <div id="settings" class="main_container" style="display:none">
+                        <form ref='uploadForm' 
+                            id='uploadForm' 
+                            action='/upload' 
+                            method='Post' 
+                            encType="multipart/form-data">
+                                <input type="file" name="sampleFile" />
+                                <input type='submit' value='Upload!' />
+                        </form>    
                     </div>
-                    <div class="kt-portlet__head-toolbar">
-                        <div class="kt-portlet__head-wrapper">
 
-                            <div class="kt-form kt-fork--label-right kt-margin-t-10 kt-margin-b-10">
-                                <div class="row">
-                                    <div class="row">
-                                        <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
-                                            <div class="kt-input-icon kt-input-icon--left">
-                                                <input type="text" class="form-control" placeholder="Search..." id="generalSearch">
-                                                <span class="kt-input-icon__icon kt-input-icon__icon--left">
-                                                <span><i class="la la-search"></i></span>
-                                                </span>
-                                            </div>
+                    <div id="defect_list" class="main_container" style="display:none">
+
+                            <!-- begin:: Content -->
+                            <div class="kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+                                
+                                <div class="kt-portlet kt-portlet--mobile">
+                                    <div class="kt-portlet__head kt-portlet__head--lg" style="border-bottom: 0px;">
+                                        <div class="kt-portlet__head-label">
+                                            <h3 class="kt-portlet__head-title">Defect List </h3>
                                         </div>
-                                        <div class="col-md-8">
-                                            <div class="row">
-                                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
-                                                    <div class="kt-form__group kt-form__group--inline">
-                                                        <div class="kt-form__label">
-                                                            <label>Team:</label>
-                                                        </div>
-                                                        <div class="kt-form__control">
-                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 125px;">
-                                                                <select class="form-control bootstrap-select" id="kt_form_team" tabindex="-98">
-                                                                    <option value="">All</option>
-                                                                    <option value="team_customization">Customization</option>
-                                                                    <option value="team_config">Config</option>
-                                                                    <option value="team_test">Test Team</option>
-                                                                    <option value="team_mrht">MRHT</option>
-                                                                    <option value="team_functional">Functional</option>
-                                                                    <option value="team_integration">Integration</option>
-                                                                    <option value="team_data">Data Migration</option>
-                                                                    <option value="team_infra">Infra / DevOps</option>
-                                                                    <option value="team_client">Client</option>   
-                                                                </select>
+                                        <div class="kt-portlet__head-toolbar">
+                                            <div class="kt-portlet__head-wrapper">
+
+                                                <div class="kt-form kt-fork--label-right kt-margin-t-10 kt-margin-b-10">
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                                <div class="kt-input-icon kt-input-icon--left">
+                                                                    <input type="text" class="form-control" placeholder="Search..." id="generalSearch">
+                                                                    <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                                                    <span><i class="la la-search"></i></span>
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
-                                                    <div class="kt-form__group kt-form__group--inline">
-                                                        <div class="kt-form__label">
-                                                            <label>Severity:</label>
-                                                        </div>
-                                                        <div class="kt-form__control">
-                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 100px;">
-                                                                <select class="form-control bootstrap-select" id="kt_form_sev" tabindex="-98">
-                                                                    <option value="">All</option>
-                                                                    <option value="1">Critical</option>
-                                                                    <option value="2">Major</option>
-                                                                    <option value="3">Minor</option>
-                                                                    <option value="4">Cosmetic</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
-                                                    <div class="kt-form__group kt-form__group--inline">
-                                                        <div class="kt-form__label">
-                                                            <label>Status:</label>
-                                                        </div>
-                                                        <div class="kt-form__control">
-                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 100px;">
-                                                                <select class="form-control bootstrap-select" id="kt_form_status" tabindex="-98">
-                                                                    <option value="">All</option>
-                                                                    <option value="Open">Open</option>
-                                                                    <option value="Blocked">Blocked</option>
-                                                                    <option value="Fix">Fixing</option>
-                                                                    <option value="Review">Reviewing</option>
-                                                                    <option value="Test">Testing</option>
-                                                                    <option value="Closed">Closed</option>
-                                                                    <option value="Not a Bug">Not a Bug</option>
-                                                                    <option value="Rejected">Rejected</option>
-                                                                    <option value="Deferred">Deferred</option>
-                                                                </select>
+                                                            <div class="col-md-8">
+                                                                <div class="row">
+                                                                    <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                                        <div class="kt-form__group kt-form__group--inline">
+                                                                            <div class="kt-form__label">
+                                                                                <label>Team:</label>
+                                                                            </div>
+                                                                            <div class="kt-form__control">
+                                                                                <div class="dropdown bootstrap-select form-control" style="min-width: 125px;">
+                                                                                    <select class="form-control bootstrap-select" id="kt_form_team" tabindex="-98">
+                                                                                        <option value="">All</option>
+                                                                                        <option value="team_customization">Customization</option>
+                                                                                        <option value="team_config">Config</option>
+                                                                                        <option value="team_test">Test Team</option>
+                                                                                        <option value="team_mrht">MRHT</option>
+                                                                                        <option value="team_functional">Functional</option>
+                                                                                        <option value="team_integration">Integration</option>
+                                                                                        <option value="team_data">Data Migration</option>
+                                                                                        <option value="team_infra">Infra / DevOps</option>
+                                                                                        <option value="team_client">Client</option>   
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                                        <div class="kt-form__group kt-form__group--inline">
+                                                                            <div class="kt-form__label">
+                                                                                <label>Severity:</label>
+                                                                            </div>
+                                                                            <div class="kt-form__control">
+                                                                                <div class="dropdown bootstrap-select form-control" style="min-width: 100px;">
+                                                                                    <select class="form-control bootstrap-select" id="kt_form_sev" tabindex="-98">
+                                                                                        <option value="">All</option>
+                                                                                        <option value="1">Critical</option>
+                                                                                        <option value="2">Major</option>
+                                                                                        <option value="3">Minor</option>
+                                                                                        <option value="4">Cosmetic</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                                        <div class="kt-form__group kt-form__group--inline">
+                                                                            <div class="kt-form__label">
+                                                                                <label>Status:</label>
+                                                                            </div>
+                                                                            <div class="kt-form__control">
+                                                                                <div class="dropdown bootstrap-select form-control" style="min-width: 100px;">
+                                                                                    <select class="form-control bootstrap-select" id="kt_form_status" tabindex="-98">
+                                                                                        <option value="">All</option>
+                                                                                        <option value="Open">Open</option>
+                                                                                        <option value="Blocked">Blocked</option>
+                                                                                        <option value="Fix">Fixing</option>
+                                                                                        <option value="Review">Reviewing</option>
+                                                                                        <option value="Test">Testing</option>
+                                                                                        <option value="Closed">Closed</option>
+                                                                                        <option value="Not a Bug">Not a Bug</option>
+                                                                                        <option value="Rejected">Rejected</option>
+                                                                                        <option value="Deferred">Deferred</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -474,38 +489,28 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="kt-portlet__body"  style="padding: 5px 25px 0px 25px">
+                                        <!--begin: Search Form -->
+                                        
+                                        <!--end: Search Form -->
+                                    </div>
+                                    <div id="kt_recent_orders" class="kt-portlet__body kt-portlet__body--fit">
+                                        <div id="loading_data" style="margin: 15px; margin-bottom: 25px; display: none">
+                                            <div style="margin: auto; width: 200px">
+                                                <div class="spinner-grow text-info" role="status" style="float: left">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                                <div style="float: left; margin-left: 10px; line-height: 25px; font-size: 14px;">Loading data...</div>
+                                            </div>                        
+                                        </div>
+                                            
+                                    </div>
                                 </div>
-                            </div>
+
                         </div>
+
                     </div>
-                </div>
-
-                <div class="kt-portlet__body"  style="padding: 5px 25px 0px 25px">
-                    <!--begin: Search Form -->
-                    
-                    <!--end: Search Form -->
-                </div>
-                <div id="kt_recent_orders" class="kt-portlet__body kt-portlet__body--fit">
-                    <div id="loading_data" style="margin: 15px; margin-bottom: 25px; display: none">
-                        <div style="margin: auto; width: 200px">
-                            <div class="spinner-grow text-info" role="status" style="float: left">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                            <div style="float: left; margin-left: 10px; line-height: 25px; font-size: 14px;">Loading data...</div>
-                        </div>                        
-                    </div>
-                        
-                </div>
-            </div>
-
-    </div>
-
-</div>
-
-
-
-
-
 
 
                     <div id="functional_set_info" class="main_container" style="display:none;">

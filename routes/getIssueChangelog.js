@@ -7,10 +7,10 @@ var jiraRequestModule = new JiraRequestModule();
 var jiraParsingInstance = new JiraParsingModule();
 
 router.get('/:issueId', async (req, res) => {
-    jiraRequestModule.getIssueChangelogData(req.params.issueId)
+    jiraRequestModule.getIssueChangelogData(req.params.issueId, 0)
     .then((data) => {
       
-     res.json(JSON.parse(data));
+     res.json(jiraParsingInstance.parseIssuesChangeLogs(JSON.parse(data)));
        
     })
     .catch((err) => {

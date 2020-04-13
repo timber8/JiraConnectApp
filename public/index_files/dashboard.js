@@ -1841,7 +1841,7 @@ function getAllDefectsInfo() {
         type: "GET",
         async: true,
         dataType: "json",
-        url: "/getAllDefectInformation",
+        url: "/getAllDefectInformationWithChangeLog",
         success: function(data){
             //console.log("Success", data);
             allDefectsInfo = addTeam(data);    
@@ -2501,6 +2501,8 @@ function loadPage(target, bypass) {
 
   var container = target.attr('container-target');
   if (container != undefined) {
+
+    console.log(container);
 
     if (container == "defect_list") {
       //$('#kt_form_sev,#kt_form_status,#kt_form_team').selectpicker();   
