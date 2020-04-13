@@ -1,26 +1,1476 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <title>Jira Connector App</title>
-  </head>
-  <body>
-    <h1>Jira Connector App</h1>
-    <button id="getIssues" onclick="getAllIssues()">Jira</button>
-    <p>
-      Broker Maintenance Issues Count: <span id="totalCount"></span>
-    </p> 
-    <button id="renderBtn">
-      Render
-    </button>
-    <div class="container">
-        <canvas id="myChart"></canvas>
+<!-- begin::Head -->
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+
+    <title>Cigna Helix | Defect Dashboard</title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!--begin::Fonts -->
+    <link rel="stylesheet" href="index_files/css.css">
+     <link rel="stylesheet" href="index_files/helix.css">
+    <!--end::Fonts -->
+
+    <!--begin::Page Vendors Styles(used by this page) -->
+    <link href="index_files/fullcalendar.css" rel="stylesheet" type="text/css">
+    <!--end::Page Vendors Styles -->
+
+    <!--begin::Global Theme Styles(used by all pages) -->
+    <link href="index_files/plugins.css" rel="stylesheet" type="text/css">
+    <link href="index_files/style.css" rel="stylesheet" type="text/css">
+    <!--end::Global Theme Styles -->
+
+    <!--begin::Layout Skins(used by all pages) -->
+
+    <link href="index_files/navy.css" rel="stylesheet" type="text/css">
+    <!--end::Layout Skins -->
+
+    <script async="" src="index_files/hotjar-1070954.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async="" src="index_files/js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-37564768-1');
+    </script>
+    <style type="text/css">
+        /* Chart.js */
+        /*
+ * DOM element rendering detection
+ * https://davidwalsh.name/detect-node-insertion
+ */
+        
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .chartjs-render-monitor {
+            animation: chartjs-render-animation 0.001s;
+        }
+        /*
+ * DOM element resizing detection
+ * https://github.com/marcj/css-element-queries
+ */
+        
+        .chartjs-size-monitor,
+        .chartjs-size-monitor-expand,
+        .chartjs-size-monitor-shrink {
+            position: absolute;
+            direction: ltr;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            visibility: hidden;
+            z-index: -1;
+        }
+        
+        .chartjs-size-monitor-expand > div {
+            position: absolute;
+            width: 1000000px;
+            height: 1000000px;
+            left: 0;
+            top: 0;
+        }
+        
+        .chartjs-size-monitor-shrink > div {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            left: 0;
+            top: 0;
+        }
+    </style>
+    <script async="" src="index_files/modules.js" charset="utf-8"></script>
+    <style type="text/css">
+        iframe#_hjRemoteVarsFrame {
+            display: none !important;
+            width: 1px !important;
+            height: 1px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+    </style>
+</head>
+<!-- end::Head -->
+
+<!-- begin::Body -->
+
+<body class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--static kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-aside--enabled kt-aside--fixed" style="">
+<div class="container-top">
+    <!-- begin::Page loader -->
+
+    <!-- end::Page Loader -->
+    <!-- begin:: Page -->
+
+    <!-- begin:: Header Mobile -->
+    <div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed ">
+        <div class="kt-header-mobile__logo">
+            <a href="https://keenthemes.com/keen/preview/demo2/index.html">
+                <img alt="Logo" src="index_files/logo-1.png">
+            </a>
+        </div>
+        <div class="kt-header-mobile__toolbar">
+            <button class="kt-header-mobile__toolbar-toggler kt-header-mobile__toolbar-toggler--left" id="kt_aside_mobile_toggler"><span></span></button>
+
+            <button class="kt-header-mobile__toolbar-topbar-toggler" id="kt_header_mobile_topbar_toggler"><i class="flaticon-more"></i></button>
+        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="sketch.js"></script>
-  </body>
+    <!-- end:: Header Mobile -->
+
+    <div class="kt-grid kt-grid--hor kt-grid--root">
+        <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page">
+            <!-- begin:: Aside -->
+            <button class="kt-aside-close " id="kt_aside_close_btn"><i class="la la-close"></i></button>
+
+            <div class="kt-aside aside-fix kt-aside--fixed  kt-grid__item kt-grid kt-grid--desktop kt-grid--hor-desktop" id="kt_aside">
+
+                <!-- begin:: Aside -->
+                <div class="kt-aside__brand   kt-grid__item" id="kt_aside_brand" style="" kt-hidden-height="70">
+                    <div class="kt-aside__brand-logo" style="font-size: 16px; font-weight: 500; letter-spacing: 1px; color: #ccc">
+                        <a href="#">
+                            <img alt="Logo" src="logo.png">
+                        </a>
+                    </div>
+                    <div class="kt-aside__brand-tools">
+                        <button class="kt-aside__brand-aside-toggler kt-aside__brand-aside-toggler--left" id="kt_aside_toggler"><span></span></button>
+                    </div>
+                </div>
+                <!-- end:: Aside -->
+                <!-- begin:: Aside Menu -->
+                <div class="kt-aside-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_aside_menu_wrapper">
+                    <div id="kt_aside_menu" class="kt-aside-menu kt-scroll ps ps--active-y" data-ktmenu-vertical="1" data-ktmenu-scroll="1" data-ktmenu-dropdown-timeout="500" style="height: 844px; overflow: hidden;">
+
+                        <ul class="kt-menu__nav ">
+
+                            <li class="kt-menu__item kt-menu__item--submenu kt-menu__item kt-menu__item" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon fa fa-chart-bar"></i><span class="kt-menu__link-text">Test Execution</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                                    <ul class="kt-menu__subnav">
+                                        <li container-target="defect_overview" page-title="Test Execution" data-fs="" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Overview</span>
+                                            </a>
+                                        </li>
+                                        <li container-target="defect_overview" page-title="Broker Maintenance" data-fs="Broker Maintenance" class="kt-menu__item" aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Broker Maintenance</span>
+                                            </a>
+                                        </li>
+                                        <li container-target="defect_overview" page-title="New Provider Fields" data-fs="New Provider Fields" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">New Provider Fields</span>
+                                            </a>
+                                        </li>
+                                        <li container-target="defect_overview" page-title="Provider Partners (Part A)" data-fs="Provider Partners (Cigna Links, US Netw, Service Partners, Vecozo) including Pre-paid claims" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Provider Partners (Part A)</span>
+                                            </a>
+                                        </li>                            
+                                        <li container-target="defect_overview" page-title="Suspend & Unsuspend Broker" data-fs="Suspend & Unsuspend Broker" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Suspend & Unsuspend Broker</span>
+                                            </a>
+                                        </li>                            
+                                        <li container-target="defect_overview" page-title="Suspend & Unsuspend client/customer" data-fs="Suspend & Unsuspend client%2Fcustomer" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Suspend & Unsuspend client/customer</span>
+                                            </a>
+                                        </li>                                                                 
+                                        <li container-target="defect_overview" page-title="Manual Fees" data-fs="Manual Fees" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Manual Fees</span>
+                                            </a>
+                                        </li>                                                                     
+                                        <li container-target="defect_overview" page-title="Multi urrency" data-fs="Multi Currency" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Multi Currency</span>
+                                            </a>
+                                        </li>                                                            
+                                        <li container-target="defect_overview" page-title="Commission Calculation" data-fs="Commission Calculation" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Commission Calculation</span>
+                                            </a>
+                                        </li>                                                                
+                                        <li container-target="defect_overview" page-title="Pre-Bill" data-fs="Pre-Bill" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Pre-Bill</span>
+                                            </a>
+                                        </li> 
+                                        <li container-target="defect_overview" page-title="Client Contact Info" data-fs="Client Contact Info" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Client Contact Info</span>
+                                            </a>
+                                        </li>
+                                        <li container-target="defect_overview" page-title="Client Information" data-fs="Client Information" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Client Information</span>
+                                            </a>
+                                        </li>
+                                        <li container-target="defect_overview" page-title="Client Preferences" data-fs="Client Preferences" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Client Preferences</span>
+                                            </a>
+                                        </li>
+                                        <li container-target="defect_overview" page-title="Initial Policy Creation" data-fs="Initial Policy Creation" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Initial Policy Creation</span>
+                                            </a>
+                                        </li>
+                                        <li container-target="defect_overview" page-title="Claim Rules" data-fs="Claim Rules" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Claim Rules</span>
+                                            </a>
+                                        </li>       
+                                        <li container-target="defect_overview" page-title="New Authorisation Fields" data-fs="New Authorisation Fields" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">New Authorisation Fields</span>
+                                            </a>
+                                        </li>       
+                                        <li container-target="defect_overview" page-title="Initial Member Creation" data-fs="Initial Member Creation" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Initial Member Creation</span>
+                                            </a>
+                                        </li>                                                            
+                                        <li container-target="defect_overview" page-title="New Invoice & Batch Fields" data-fs="New Invoice & Batch Fields" class="kt-menu__item " aria-haspopup="true">
+                                            <a href="#" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">New Invoice & Batch Fields</span>
+                                            </a>
+                                        </li>    
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li container-target="defect_list" page-title="List of Defects" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-list-1"></i><span class="kt-menu__link-text">Defect List</span></a>
+                            </li>
+
+                            <li class="kt-menu__section ">
+                                <h4 class="kt-menu__section-text">Customization</h4>
+                                <i class="kt-menu__section-icon flaticon-more-v2"></i>
+                            </li>
+                            <li class="kt-menu__item  kt-menu__item--submenu kt-menu__item--open kt-menu__item" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-diagram"></i><span class="kt-menu__link-text">Functional Sets</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                                    <ul class="kt-menu__subnav">
+                                        <li container-target="functional_set_info" page-title="Functional Set Progress" class="kt-menu__item  kt-menu__item--active" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
+                                            <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                                                <span class="kt-menu__link-text">Overview</span>
+                                            </a>
+                                        </li>
+                                        <li class="kt-menu__item  kt-menu__item" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Detail</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-imac"></i><span class="kt-menu__link-text">Demos</span></a>
+                            </li>
+                            <li class="kt-menu__section ">
+                                <h4 class="kt-menu__section-text">Other</h4>
+                                <i class="kt-menu__section-icon flaticon-more-v2"></i>
+                            </li>
+                            <li class="kt-menu__item " aria-haspopup="true"><a href="#" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-cogwheel-1"></i><span class="kt-menu__link-text">Settings</span></a></li>
+                        </ul>
+                        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                            <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                        </div>
+                        <div class="ps__rail-y" style="top: 0px; height: 844px; right: 2px;">
+                            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end:: Aside Menu -->
+            </div>
+            <!-- end:: Aside -->
+            <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper">
+                <!-- begin:: Header -->
+                <div id="kt_header" class="kt-header kt-grid__item " data-ktheader-minimize="on">
+                    <div class="kt-container  kt-container--fluid ">
+
+                        <!-- begin:: Subheader -->
+                        <div class="kt-subheader   kt-grid__item">
+                            <div class="kt-subheader__main">
+                                <h3 id="title_page" class="kt-subheader__title" style="font-size: 22px"></h3>
+
+                                <span class="kt-subheader__separator kt-hidden"></span>
+                                <div class="kt-subheader__breadcrumbs">
+                            
+                                    <a id="domain_pill" class="kt-subheader__breadcrumbs-link">
+                                        <span class="badge badge-pill badge-secondary"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- begin:: Topbar -->
+                        <div class="kt-header__topbar">
+                            <!--begin: Search -->
+                            <div class="kt-header__topbar-item kt-header__topbar-item--search" style="margin-right: 0px;">
+                                <div class="kt-header__topbar-wrapper">
+                                    <div class="kt-quick-search kt-quick-search--inline kt-quick-search--result-compact" id="kt_quick_search_inline" style="margin-right: 0px;">
+                                        <form method="get" class="kt-quick-search__form">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text"><i class="flaticon2-search-1"></i></span></div>
+                                                <input type="text" class="form-control kt-quick-search__input" placeholder="Quick search...">
+                                                <div class="input-group-append"><span class="input-group-text"><i class="la la-close kt-quick-search__close"></i></span></div>
+                                            </div>
+                                        </form>
+
+                                        <div data-toggle="dropdown" data-offset="0,15px"></div>
+
+                                        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-lg">
+                                            <div class="kt-quick-search__wrapper kt-scroll ps" data-scroll="true" data-height="325" data-mobile-height="200" style="height: 325px; overflow: hidden;">
+                                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                                                </div>
+                                                <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                                                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end: Search -->
+                        </div>
+                        <!-- end:: Topbar -->
+                    </div>
+                </div>
+                <!-- end:: Header -->
+                <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+
+                    <!-- begin:: Subheader -->
+                    <div class="kt-subheader   kt-grid__item" id="kt_subheader">
+                        <div class="kt-container  kt-container--fluid ">
+                            <div class="kt-subheader__main">
+                                <h3 class="kt-subheader__title">Cigna Helix</h3>
+
+                                <span class="kt-subheader__separator kt-hidden"></span>
+                                <div class="kt-subheader__breadcrumbs">
+                                    <a href="#" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i></a>
+                                    <span class="kt-subheader__breadcrumbs-separator"></span>
+                                    <a href="" class="kt-subheader__breadcrumbs-link">
+                            Execution Progress                        </a>
+                                    <span class="kt-subheader__breadcrumbs-separator"></span>
+                                    <a href="" class="kt-subheader__breadcrumbs-link">
+                            Overview                        </a>
+                                    <!-- <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Active link</span> -->
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end:: Subheader -->
+
+                    <!-- begin:: Content -->
+                    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid" >
+
+
+
+
+<div id="defect_list" class="main_container" style="display:none">
+
+        <!-- begin:: Content -->
+        <div class="kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+            
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__head kt-portlet__head--lg" style="border-bottom: 0px;">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">Defect List </h3>
+                    </div>
+                    <div class="kt-portlet__head-toolbar">
+                        <div class="kt-portlet__head-wrapper">
+
+                            <div class="kt-form kt-fork--label-right kt-margin-t-10 kt-margin-b-10">
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                            <div class="kt-input-icon kt-input-icon--left">
+                                                <input type="text" class="form-control" placeholder="Search..." id="generalSearch">
+                                                <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                                <span><i class="la la-search"></i></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="row">
+                                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                    <div class="kt-form__group kt-form__group--inline">
+                                                        <div class="kt-form__label">
+                                                            <label>Team:</label>
+                                                        </div>
+                                                        <div class="kt-form__control">
+                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 125px;">
+                                                                <select class="form-control bootstrap-select" id="kt_form_team" tabindex="-98">
+                                                                    <option value="">All</option>
+                                                                    <option value="team_customization">Customization</option>
+                                                                    <option value="team_config">Config</option>
+                                                                    <option value="team_test">Test Team</option>
+                                                                    <option value="team_mrht">MRHT</option>
+                                                                    <option value="team_functional">Functional</option>
+                                                                    <option value="team_integration">Integration</option>
+                                                                    <option value="team_data">Data Migration</option>
+                                                                    <option value="team_infra">Infra / DevOps</option>
+                                                                    <option value="team_client">Client</option>   
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                    <div class="kt-form__group kt-form__group--inline">
+                                                        <div class="kt-form__label">
+                                                            <label>Severity:</label>
+                                                        </div>
+                                                        <div class="kt-form__control">
+                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 100px;">
+                                                                <select class="form-control bootstrap-select" id="kt_form_sev" tabindex="-98">
+                                                                    <option value="">All</option>
+                                                                    <option value="1">Critical</option>
+                                                                    <option value="2">Major</option>
+                                                                    <option value="3">Minor</option>
+                                                                    <option value="4">Cosmetic</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                    <div class="kt-form__group kt-form__group--inline">
+                                                        <div class="kt-form__label">
+                                                            <label>Status:</label>
+                                                        </div>
+                                                        <div class="kt-form__control">
+                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 100px;">
+                                                                <select class="form-control bootstrap-select" id="kt_form_status" tabindex="-98">
+                                                                    <option value="">All</option>
+                                                                    <option value="Open">Open</option>
+                                                                    <option value="Blocked">Blocked</option>
+                                                                    <option value="Fix">Fixing</option>
+                                                                    <option value="Review">Reviewing</option>
+                                                                    <option value="Test">Testing</option>
+                                                                    <option value="Closed">Closed</option>
+                                                                    <option value="Not a Bug">Not a Bug</option>
+                                                                    <option value="Rejected">Rejected</option>
+                                                                    <option value="Deferred">Deferred</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kt-portlet__body"  style="padding: 5px 25px 0px 25px">
+                    <!--begin: Search Form -->
+                    
+                    <!--end: Search Form -->
+                </div>
+                <div id="kt_recent_orders" class="kt-portlet__body kt-portlet__body--fit">
+                    <div id="loading_data" style="margin: 15px; margin-bottom: 25px; display: none">
+                        <div style="margin: auto; width: 200px">
+                            <div class="spinner-grow text-info" role="status" style="float: left">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div style="float: left; margin-left: 10px; line-height: 25px; font-size: 14px;">Loading data...</div>
+                        </div>                        
+                    </div>
+                        
+                </div>
+            </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                    <div id="functional_set_info" class="main_container" style="display:none;">
+                        
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                                <div class="kt-portlet kt-widget-15">
+                                    <div class="kt-portlet__body">
+                                        <!-- Doc: The bootstrap carousel is a slideshow for cycling through a series of content, see https://getbootstrap.com/docs/4.1/components/carousel/ -->
+                                        <div id="kt-widget-slider-14-2" class="kt-slider carousel slide pointer-event">
+                                      
+                                            <div class="kt-widget-15__body">
+                                                <div class="col-md-1 kt-margin-b-20-tablet-and-mobile">
+                                                    <div class="alert-icon" style="font-size: 2rem; margin-left: -5px">
+                                                        <i class="la la-filter kt-font-secondary"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-5 kt-margin-b-20-tablet-and-mobile" style="padding-left:0px !important">                                                    
+                                                    <div class="kt-input-icon kt-input-icon--left">
+                                                        <input type="text" class="form-control" placeholder="Functional Set..." id="fsSearch">
+                                                        <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                                            <span><i class="la la-search"></i></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
+                                                    <div class="kt-form__group">                                                            
+                                                        <div class="kt-form__control">
+                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 75px;">
+                                                                <select class="form-control bootstrap-select" id="kt_fs_team" tabindex="-98">
+                                                                    <option value="">Team</option>
+                                                                    <option value="PT">PT</option>
+                                                                    <option value="USI">USI</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                                    <div class="kt-form__group">                                                            
+                                                        <div class="kt-form__control">
+                                                            <div class="dropdown bootstrap-select form-control" style="min-width: 75px;">
+                                                                <select class="form-control bootstrap-select" id="kt_fs_domain" tabindex="-98">
+                                                                    <option value="">Domain</option>
+                                                                    <option value="Brokers & Client Setup">Brokers & Client Setup</option>
+                                                                    <option value="Eligibility & Enrollment">Eligibility & Enrollment</option>
+                                                                    <option value="Premium Billing">Premium Billing</option>
+                                                                    <option value="Claims">Claims</option>
+                                                                    <option value="Product">Product</option>
+                                                                    <option value="Customer Service">Customer Service</option>
+                                                                    <option value="Cross Domain">Cross Domain</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>      
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="kt-widget-3 kt-widget-3--success" style="height: auto;">
+                                    <div class="kt-widget-3__content" style="padding: 1rem;">
+                                        <div class="kt-widget-3__content-info" style="padding-bottom: 0rem; padding-right: 1rem; padding-left: 1rem;">
+                                            <div class="kt-widget-3__content-section">
+                                                <div class="kt-widget-3__content-title" style="color:white !important;">Functional Sets</div>
+                                                <div class="kt-widget-3__content-desc" style="font-size: 16px; font-weight: 200; letter-spacing: 2px; color:white !important;">Delivered</div>
+                                            </div>
+                                            <div class="kt-widget-3__content-section">
+                                                <span id="total_delivered" class="kt-widget-3__content-number">3<span> / 12</span></span>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="kt-widget-3 kt-widget-3--warning" style="height: auto; ">
+                                    <div class="kt-widget-3__content" style="padding: 1rem;">
+                                        <div class="kt-widget-3__content-info" style="padding-bottom: 0rem; padding-right: 1rem; padding-left: 1rem;">
+                                            <div class="kt-widget-3__content-section">
+                                                <div class="kt-widget-3__content-title" style="color:white !important;">Test Execution</div>
+                                                <div class="kt-widget-3__content-desc" style="font-size: 16px; font-weight: 200; letter-spacing: 2px; color:white !important;">Progress</div>
+                                            </div>
+                                            <div class="kt-widget-3__content-section">
+                                                <span id="test_percentage" class="kt-widget-3__content-number" style="color:white !important;">0<span> %</span></span>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!--begin::Dashboard 6-->
+                        <div class="kt-portlet kt-profile kt-widget--general-3">     
+                            <div id="test_table"></div>
+                            <div style="display: none">
+                            <select class="form-control bootstrap-select" id="kt_update" tabindex="-98" style="display:none">
+                                <option value="">All</option>
+                            </select>
+                            </div>
+                        </div>
+
+
+
+					</div>
+
+                        <!--begin::Row-->
+                        <div class="row main_container" id="defect_overview">
+                            <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
+
+
+                                <!--begin::Portlet-->
+                                <div class="kt-portlet kt-portlet--height-fluid">
+									<div class="kt-portlet__head  kt-portlet__head">
+										<div class="kt-portlet__head-label">
+											<h3 class="kt-portlet__head-title">Defect Status</h3>
+										</div>
+									</div>
+
+
+									<div class="kt-portlet__body kt-portlet__body--fluid" >
+										<div class="chartjs-size-monitor">
+											<div class="chartjs-size-monitor-expand">
+												<div class=""></div>
+											</div>
+											<div class="chartjs-size-monitor-shrink">
+												<div class=""></div>
+											</div>
+										</div>
+										<div id="helix_status_chart_total" class="helix_pie_legend" style="z-index: 1">
+                                            <div class="spinner-grow text-info" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+										<!--Doc: For the chart initialization refer to "widgetTechnologiesChart" function in "src\theme\app\scripts\custom\dashboard.js" -->
+										<div id="helix_status_chart"></div>
+										<canvas id="kt_widget_technologies_chart" class="chartjs-render-monitor" style="z-index: 50"></canvas>
+										
+									</div>
+
+									<div class="kt-portlet__body kt-portlet__body--fluid" style="width:100%; height: 50px; vertical-align: middle; margin-bottom: 25px;">
+
+										<div class="helix_legend">
+											<div class="helix_legend_item">
+												<span class="kt-badge helix_d_open"></span>
+												<div class="helix_label">Open</div>
+											</div>
+											<div class="helix_legend_item">
+												<span class="kt-badge helix_d_fixed"></span>
+												<div class="helix_label">Fixed</div>
+											</div>
+											<div class="helix_legend_item">
+												<span class="kt-badge helix_d_testing"></span>
+												<div class="helix_label">Testing</div>
+											</div>
+											<div class="helix_legend_item">
+												<span class="kt-badge helix_d_review"></span>
+												<div class="helix_label">Reviewing</div>
+											</div>
+											<div class="helix_legend_item">
+												<span class="kt-badge helix_d_closed"></span>
+												<div class="helix_label">Closed</div>
+											</div>
+											<div class="helix_legend_item">
+												<span class="kt-badge helix_d_rejected"></span>
+												<div class="helix_label helix_label-end">Not a bug</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                                <!--end::Portlet-->
+                               
+
+
+
+                            </div>
+                            <div class="col-lg-12 col-xl-8 order-lg-2 order-xl-1">
+                                <!--begin::Portlet-->
+                                <div class="kt-portlet kt-portlet--height-fluid">
+                                    <div class="kt-portlet__head">
+                                        <div class="kt-portlet__head-label">
+                                            <h3 class="kt-portlet__head-title">Overall Progress</h3>
+                                        </div>
+                                        <div class="kt-portlet__head-toolbar">
+                                            <div class="kt-portlet__head-wrapper">
+                                                <div id="last_updated" style="margin-right: 20px; color:#aaa"></div>
+                                                <div class="dropdown dropdown-inline">
+                                                    <button type="button" class="btn btn-label-brand btn-sm btn-bold dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Options
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__section kt-nav__section--first">
+                                                                <span class="kt-nav__section-text">Chart Type</span>
+                                                            </li>
+                                                            <li class="kt-nav__item options_change_chart" data-chart-type="line">
+                                                                <a class="kt-nav__link">
+                                                                    <i class="kt-nav__link-icon la flaticon-graph"></i>
+                                                                    <span class="kt-nav__link-text">Line</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="kt-nav__item options_change_chart" data-chart-type="bar">
+                                                                <a class="kt-nav__link">
+                                                                    <i class="kt-nav__link-icon la flaticon-graphic-2"></i>
+                                                                    <span class="kt-nav__link-text">Bar</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-portlet__body kt-portlet__body--fluid">
+                                        <div class="kt-widget-9">
+                                            <div class="kt-widget-9__panel">
+                                                <div class="kt-widget-9__legends" style="margin-top: 10px;">
+                                                    <div class="kt-widget-9__legend" style="padding-right: 1rem">
+                                                        <div class="kt-widget-9__legend-bullet kt-bg-danger"></div>
+                                                        <div class="helix_label" style="margin-left: 10px;">Open</div>
+                                                    </div>
+                                                    <div class="kt-widget-9__legend" style="padding-right: 1rem">
+                                                        <div class="kt-widget-9__legend-bullet helix_d_testing"></div>
+                                                        <div class="helix_label" style="margin-left: 10px;">Fixed</div>
+                                                    </div>
+                                                    <div class="kt-widget-9__legend">
+                                                        <div class="kt-widget-9__legend-bullet kt-label-bg-color-1"></div>
+                                                        <div class="helix_label" style="margin-left: 10px;">Closed</div>
+                                                    </div>
+                                                </div>
+                                                <div class="kt-widget-9__toolbar">
+                                                    <button type="button" data-days="30" class="btn btn-default btn-font-sm btn-upper defect-progress-days" style="margin-right: 6px; width: 80px;">30 days</button>
+                                                    <button type="button" data-days="15" class="btn btn-primary btn-font-sm btn-upper defect-progress-days" style="margin-right: 6px; width: 70px;">15 days</button>
+                                                    <button type="button" data-days="7"  class="btn btn-default btn-font-sm btn-upper defect-progress-days" style="width: 70px;">7 days</button>
+                                                </div>
+                                            </div>
+                                            <div class="kt-widget-9__chart">
+                                                <div class="chartjs-size-monitor">
+                                                    <div class="chartjs-size-monitor-expand">
+                                                        <div class=""></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink">
+                                                        <div class=""></div>
+                                                    </div>
+                                                </div>
+                                                <!--Doc: For the chart initialization refer to "widgetSalesStatisticsChart" function in "src\theme\app\scripts\custom\dashboard.js" -->
+                                                <div id="helix_progress_chart">
+                                                    <div id="progress_loading" style="margin: auto; width: 100%; text-align: center; margin-top:38px; position: absolute;">
+                                                        <div class="spinner-grow text-info" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <canvas id="kt_chart_revenue_growth" height="250" style="display: block; width: 969px; height: 250px;" width="969" class="chartjs-render-monitor">
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Portlet-->
+                            </div>
+
+                            <div class="col-lg-4 col-xl-4 order-lg-2 order-xl-1">
+                                
+
+
+								<!--begin::Portlet-->
+                                <div class="kt-portlet kt-portlet--height-fluid">
+									<div class="kt-portlet__head  kt-portlet__head">
+										<div class="kt-portlet__head-label">
+											<h3 class="kt-portlet__head-title">Severity</h3>
+										</div>
+									</div>
+
+									<div class="kt-portlet__body kt-portlet__body--fluid" style="display: flex; justify-content: center; vertical-align: middle;">
+										<div class="helix_left_side" style="width: 30%; flex-direction: column; font-size: 1.2rem">
+											<div style="height: 2.5%; "></div>
+											<div class="critical" style="height: 23.5%; ">
+												<span>Critical</span>
+											</div>
+											<div class="major" style="height: 24%">
+												<span>Major</span>
+											</div>
+											<div class="minor" style="height: 24%">
+												<span>Minor</span>
+											</div>
+											<div class="cosmetic" style="height: 23.5%">
+												<span>Cosmetic</span>
+											</div>
+											<div style="height: 2.5%; "></div>
+										</div>
+										<div class="helix_left_side" style="width: 20%; flex-direction: column; font-weight: 600; font-size: 1.3rem; text-align: right; margin-right: 35px; letter-spacing: 1px;">
+											<div style="height: 2.5%; "></div>
+											<div class="critical" style="height: 23.5%; ">
+												<span id="sev1"></span>
+											</div>
+											<div class="major" style="height: 24%">
+												<span id="sev2"></span>
+											</div>
+											<div class="minor" style="height: 24%">
+												<span id="sev3"></span>
+											</div>
+											<div class="cosmetic" style="height: 23.5%">
+												<span id="sev4"></span>
+											</div>
+											<div style="height: 2.5%; "></div>
+										</div>
+										<div class="helix_right_side" style="width: 50%;">
+											<div class="chartjs-size-monitor">
+											<div class="chartjs-size-monitor-expand">
+												<div class=""></div>
+											</div>
+											<div class="chartjs-size-monitor-shrink">
+												<div class=""></div>
+											</div>
+										</div>
+										<!--Doc: For the chart initialization refer to "widgetTechnologiesChart" function in "src\theme\app\scripts\custom\dashboard.js" -->
+										<div id="helix_sev_chart">
+                                            
+                                        </div>
+										<canvas id="kt_chart_sales_statistics" class="chartjs-render-monitor">
+
+                                        </canvas>
+
+										</div>
+									</div>
+                                </div>
+
+                                <!--end::Portlet-->
+
+
+
+
+
+
+
+                            </div>
+                            <div class="col-lg-4 col-xl-4 order-lg-2 order-xl-1">
+                                <!--begin::Portlet-->
+                                <div class="kt-portlet kt-portlet--height-fluid kt-widget-13">
+                                    <div class="kt-portlet__head  kt-portlet__head">
+                                        <div class="kt-portlet__head-label">
+                                            <h3 class="kt-portlet__head-title">Open Defects</h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="kt-portlet__body">
+                                        <div id="kt-widget-slider-13-2" class="kt-slider carousel slide pointer-event" data-ride="carousel" data-interval="4000">
+                                           
+
+                                            <ul class="nav nav-pills nav-tabs-btn nav-pills-btn-brand helix_defect_numbers" role="tablist" style="justify-content: space-between;">
+								                <div>
+								                	<li class="nav-item"  style="width: 90px;">								                	
+									                    <a class="nav-link bg-danger white" data-toggle="tab" role="tab">
+									                        <span id="team_Customization_open" class="nav-link-icon" style="font-weight: 100; font-size: 2.15rem;">-</span>
+									                        <span class="nav-link-title">Custom</span>
+									                    </a>								                    
+								                	</li>
+									                <div style="margin: auto; width: 90px; text-align: center; margin-top: 15px;">
+									                	<span class="helix_badge helix_red"><i class="la la-angle-right" style="margin-right: 5px;"></i>
+                                                            <span id="team_Customization_total">-</span></span>
+									            	</div>
+								            	</div>
+								            	<div>
+									                <li class="nav-item" style="width: 90px;">
+									                    <a class="nav-link kt-bg-success white" data-toggle="tab" role="tab">
+									                        <span id="team_Configuration_open" class="nav-link-icon" style="font-weight: 100; font-size: 2.15rem">-</span>
+									                        <span class="nav-link-title">Config</span>
+									                    </a>								                    
+									                </li>								                
+									                <div style="margin: auto; width: 90px; text-align: center; margin-top: 15px;">
+									                	<span class="helix_badge helix_green"><i class="la la-angle-right" style="margin-right: 5px;"></i>
+                                                            <span id="team_Configuration_total">-</span></span>
+									            	</div>
+									            </div>
+									            <div>
+									                <li class="nav-item"  style="width: 90px;">
+									                    <a class="nav-link white" data-toggle="tab" role="tab" aria-selected="true" style="background-color: rgba(5,170,240,0.6);">
+									                        <span id="team_Testing_open" class="nav-link-icon" style="font-weight: 100; font-size: 2.15rem">-</span>
+									                        <span class="nav-link-title">Testing</span>
+									                    </a>
+									                </li>							                
+									                <div style="margin: auto; width: 90px; text-align: center; margin-top: 15px;">
+									                	<span class="helix_badge helix_blue2"><i class="la la-angle-right" style="margin-right: 5px;"></i>
+                                                            <span id="team_Testing_total">-</span></span>
+									            	</div>
+									            </div>
+									            <div>
+									                <li class="nav-item"  style="width: 90px;">
+									                    <a class="nav-link kt-bg-brand white" data-toggle="tab" role="tab" aria-selected="true">
+									                        <span id="team_MRHT_open" class="nav-link-icon" style="font-weight: 100; font-size: 2.15rem">-</span>
+									                        <span class="nav-link-title">MRHT</span>
+									                    </a>
+									                </li>						                
+									                <div style="margin: auto; width: 90px; text-align: center; margin-top: 15px;">
+									                	<span class="helix_badge helix_blue"><i class="la la-angle-right" style="margin-right: 5px;"></i>
+                                                            <span id="team_MRHT_total" >-</span></span>
+									            	</div>
+									            </div>
+								            </ul>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Portlet-->
+                            </div>
+                            <div class="col-lg-4 col-xl-4 order-lg-2 order-xl-1">
+                                <!--begin::Portlet-->
+                                <div class="kt-portlet kt-portlet--height-fluid kt-widget-13">
+                                    <div class="kt-portlet__body">
+                                        <div id="kt-widget-slider-13-3" class="kt-slider carousel slide pointer-event" data-ride="carousel" data-interval="12000">
+                                           
+
+
+
+                                            <div class="kt-widget-18 ">
+                                                <div class="kt-widget-18__summary">
+                                                    <div class="kt-widget-18__total" id="te_passrate">0 %</div>
+                                                    <div class="kt-widget-18__label" style="font-size: 1.3rem; font-weight: 400; margin-bottom: 17px;">Test Execution <small style="margin-left: 5px;">Passed</small></div>
+                                                </div>
+                                                <div class="kt-widget-18__progress">
+                                                    <div class="progress te_execution">
+                                                        <!-- Doc: A bootstrap progress bar can be used to show a user how far along it's in a process, see https://getbootstrap.com/docs/4.1/components/progress/ -->
+                                                        <div class="progress-bar bg-success passed" role="progressbar" style="width: 0%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        <div class="progress-bar bg-danger failed" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        <div class="progress-bar bg-gray notexe" role="progressbar" style="width: 0%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="kt-widget-18__item" style="margin-bottom: 1.4rem">
+                                                    <div class="kt-widget-18__legend kt-bg-success"></div>
+                                                    <div class="kt-widget-18__desc">
+                                                        <a href=""><span class="kt-widget-18__title">
+                                                            Passed
+                                                        </span></a>
+                                                        <span class="kt-widget-18__desc"></span>
+                                                    </div>
+                                                    <div class="kt-widget-18__orders">
+                                                        <span id="te_passed"></span> Test Cases
+                                                    </div>
+                                                </div>
+                                                <div class="kt-widget-18__item" style="margin-bottom: 1.4rem">
+                                                    <div class="kt-widget-18__legend kt-bg-danger"></div>
+                                                    <div class="kt-widget-18__desc">
+                                                        <a href=""><span class="kt-widget-18__title">
+                                                            Failed
+                                                        </span></a>
+                                                        <span class="kt-widget-18__desc"></span>
+                                                    </div>
+                                                    <div class="kt-widget-18__orders">
+                                                        <span id="te_failed"></span> Test Cases
+                                                    </div>
+                                                </div>
+                                                <div class="kt-widget-18__item" style="margin-bottom: 1.4rem">
+                                                    <div class="kt-widget-18__legend bg-gray"></div>
+                                                    <div class="kt-widget-18__desc">
+                                                        <a href=""><span class="kt-widget-18__title">
+                                                            Not Executed
+                                                        </span></a>
+                                                        <span class="kt-widget-18__desc">
+                                                            Not Started / Blocked
+                                                        </span>
+                                                    </div>
+                                                    <div class="kt-widget-18__orders">
+                                                        <span id="te_notexe"></span> Test Cases
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        
+
+
+                                            <!--
+                                             <div class="kt-slider__head" style="margin-bottom: 2rem;">
+                                                <div class="kt-slider__label">Delivery Progress</div>
+                                            </div>
+                                            <div class="kt-widget-13__foot" style="padding-top: 0rem; margin-top: 0.5rem">
+												<div class="kt-widget-13__progress">
+													<div class="kt-widget-13__progress-info">
+														<div class="kt-widget-13__progress-status" style="font-size: 1.2rem">
+															<i class="flaticon-file-1"></i> Technical Design
+														</div>
+														<div>
+															<div class="kt-widget-11__value" style="font-weight: 500; float:left; margin-top: 2px; margin-right: 10px">
+																13&nbsp;/&nbsp;<span class="kt-opacity-5">34</span>
+															</div>	
+															<div style="font-weight: 600; float:left; padding: 0.1rem 0.3rem; border-radius: 5px; background-color: rgba(85, 120, 235, 0.1); color: #5578eb;">
+																<span class="kt-opacity-5">38 %</span>
+															</div>		
+														</div>
+													</div>
+													<div class="progress" style="height: 7px;">
+														<div class="progress-bar kt-bg-brand" role="progressbar" style="width: 38%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+											<div class="kt-widget-13__foot" style="margin-top: 0.7rem">
+												<div class="kt-widget-13__progress">
+													<div class="kt-widget-13__progress-info">
+														<div class="kt-widget-13__progress-status" style="font-size: 1.2rem">
+															<i class="flaticon-tool"></i> Build and Unit Testing
+														</div>														
+														<div>
+															<div class="kt-widget-11__value" style="font-weight: 500; float:left; margin-top: 2px; margin-right: 10px">
+																7&nbsp;/&nbsp;<span class="kt-opacity-5">34</span>
+															</div>	
+															<div style="font-weight: 600; float:left; background-color: rgba(29, 201, 183, 0.1); color: #1dc9b7; padding: 0.1rem 0.3rem; border-radius: 5px;">
+																<span class="kt-opacity-5">20 %</span>
+															</div>	
+														</div>
+													</div>
+													<div class="progress" style="height: 7px;">
+														<div class="progress-bar bg-success" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+											<div class="kt-widget-13__foot" style="margin-top: 0.7rem">
+												<div class="kt-widget-13__progress">
+													<div class="kt-widget-13__progress-info">
+														<div class="kt-widget-13__progress-status" style="font-size: 1.2rem">
+															<i class="flaticon-medal"></i> Test Execution
+														</div>														
+														<div>
+															<div class="kt-widget-11__value" style="font-weight: 500; float:left; margin-top: 2px; margin-right: 10px">
+																0&nbsp;/&nbsp;<span class="kt-opacity-5">34</span>
+															</div>																
+															<div style="font-weight: 600; float:left; background-color: rgba(255, 184, 34, 0.1); color: #ffb822; padding: 0.1rem 0.3rem; border-radius: 5px;">
+																<span class="kt-opacity-5">2 %</span>
+															</div>
+														</div>													
+													</div>
+													<div class="progress" style="height: 7px;">
+														<div class="progress-bar bg-warning" role="progressbar" style="width: 2%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+                                            -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Portlet-->
+                            </div>
+
+
+                            <div id="end_year" class="col-lg-12 col-xl-12" style="margin-bottom: 50px; display:none;">
+
+                                 <div class="col-lg-5 col-xl-5 order-lg-2 order-xl-1">
+                                   
+                                    <div class="kt-widget-3 kt-widget-3--shadow">
+                                        <div class="kt-widget-3__content">
+                                            <div class="kt-widget-3__content-info">
+                                                <div class="kt-widget-3__content-section" style="display: flex; justify-content: space-between;">
+                                                    
+                                                    <div style="order:1">
+                                                        <img alt="Logo" src="logo.png">
+                                                    </div>
+                                                    <div style="order:2; right:0px; position: absolute; margin-right: 47px">
+                                                        <img alt="Logo" src="deloitte2.png" style="right:0px;">
+                                                    </div>
+                                                    
+                                                    
+                                                </div>
+                                            </div>  
+
+
+                                            <div class="kt-widget-3__content-info" style="padding-bottom: 0rem;">
+                                                <div class="kt-widget-3__content-section">
+                                                    <div class="kt-widget-3__content-title" style="font-size: 22px; font-weight: 200">End Year Report</div>
+                                                    <div class="kt-widget-3__content-desc" style="color: lightgray; letter-spacing: 1px;">APPLICATION CUSTOMIZATION</div>
+                                                </div>
+                                                <div class="kt-widget-3__content-section">
+                                                    <span class="kt-widget-3__content-bedge" style="bottom: 0px; right: 0px; font-size: 20px;">December 2019</span>
+                                                    <span class="kt-widget-3__content-number"><span></span></span>               
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="col-lg-5 col-xl-5 order-lg-2 order-xl-1" style="margin-top: 25px !important;">
+                                   
+                                    <div class="kt-widget-3 kt-widget-3--success">
+                                        <div class="kt-widget-3__content" style="padding-top: 1.5rem">
+                                            <div class="kt-widget-3__content-info">
+                                                <div class="kt-widget-3__content-section">
+                                                    <div class="kt-widget-3__content-title" style="font-size: 24px; font-weight: 300">Functional Sets Delivered</div>
+                                                    <div class="kt-widget-3__content-desc" style="letter-spacing: 1px;">BUILD & UNIT TEST COMPLETED</div>
+                                                </div>
+                                                <div class="kt-widget-3__content-section">
+                                                    <span class="kt-widget-3__content-bedge"></span>
+                                                    <span class="kt-widget-3__content-number">7 <span>/ 13</span></span>               
+                                                </div>
+                                            </div>  
+                                            <div class="kt-widget-3__content-stats" style="margin-top: -10px;">                
+                                                <div class="kt-widget-3__content-progress">
+                                                    <div class="progress" style=" height: 7px;">
+                                                        <!-- Doc: A bootstrap progress bar can be used to show a user how far along it's in a process, see https://getbootstrap.com/docs/4.1/components/progress/ -->
+                                                        <div class="progress-bar bg-light" style="width: 64%; border-radius: 8px;" role="progressbar" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="kt-widget-3__content-action">
+                                                    <div class="kt-widget-3__content-text" style="color:white; font-weight: 500; font-size: 14px; letter-spacing: 1px">PROGRESS</div>
+                                                    <div class="kt-widget-3__content-value" style="color:white; font-weight: 500; font-size: 14px; letter-spacing: 1px">64%</div>
+                                                </div>
+                                            </div>
+                                            <div class="kt-widget-3__content-info" style="margin-top: 10px; padding-bottom: 0rem !important">
+
+
+
+                                                <div class="col-lg-12 col-xl-12" style="padding-bottom: 0rem; padding-right: 1rem; padding-left: 1rem;">
+                                                        <!--begin::Portlet--> 
+                                                    <div class="kt-portlet kt-portlet--tabs kt-portlet--height-fluid" style="margin-top: 25px;">
+                                                        <div class="kt-portlet__head">
+                                                            <div class="kt-portlet__head-label">
+                                                                <h3 class="kt-portlet__head-title" style="font-size: 24px; font-weight: 200">
+                                                                    Test Execution                      
+                                                                </h3>  
+                                                                <div style="right:0px; position: absolute; margin-right: 25px;">
+                                                                    <span class="badge badge-pill badge-dark" style="font-size: 14px !important; width: 28px;">5</span>
+                                                                </div>         
+                                                            </div>
+                                                        </div>
+                                                        <div class="kt-portlet__body">
+                                                            <div class="tab-content">
+                                                                <div class="tab-pane fade active show" id="kt_portlet_tabs_1111_1_content" role="tabpanel">
+                                                                    <div class="kt-widget-11">
+                                                                        <div class="kt-widget-11__item">
+                                                                            <div class="kt-widget-11__wrapper">
+                                                                                <div class="kt-widget-11__title" style="font-weight: 200; font-size: 16px;">
+                                                                                    Broker Maintenance
+                                                                                </div>
+                                                                                <div class="kt-widget-11__value" style="font-size: 16px; font-weight: 200">
+                                                                                    99 %
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="kt-widget-11__progress" style="margin-top: -5px;">
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 99%" aria-valuenow="99" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="kt-widget-11__item">
+                                                                            <div class="kt-widget-11__wrapper">
+                                                                                <div class="kt-widget-11__title" style="font-weight: 200; font-size: 16px;">
+                                                                                    New Provider Fields
+                                                                                </div>
+                                                                                <div class="kt-widget-11__value" style="font-size: 16px; font-weight: 200">
+                                                                                    89 %
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="kt-widget-11__progress" style="margin-top: -5px;">
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="kt-widget-11__item">
+                                                                            <div class="kt-widget-11__wrapper">
+                                                                                <div class="kt-widget-11__title" style="font-weight: 200; font-size: 16px;">
+                                                                                    Provider Partners (Part A)
+                                                                                </div>
+                                                                                <div class="kt-widget-11__value" style="font-size: 16px; font-weight: 200">
+                                                                                    94 %
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="kt-widget-11__progress" style="margin-top: -5px;">
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 94%" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="kt-widget-11__item">
+                                                                            <div class="kt-widget-11__wrapper">
+                                                                                <div class="kt-widget-11__title" style="font-weight: 200; font-size: 16px;">
+                                                                                    Suspend & Unsuspend Broker
+                                                                                </div>
+                                                                                <div class="kt-widget-11__value" style="font-size: 16px; font-weight: 200">
+                                                                                    83 %
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="kt-widget-11__progress" style="margin-top: -5px;">
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 83%" aria-valuenow="83" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="kt-widget-11__item" style="margin-bottom: 10px;">
+                                                                            <div class="kt-widget-11__wrapper">
+                                                                                <div class="kt-widget-11__title" style="font-weight: 200; font-size: 16px;">
+                                                                                    Suspend & Unsuspend Client/Customer
+                                                                                </div>
+                                                                                <div class="kt-widget-11__value" style="font-size: 16px; font-weight: 200">
+                                                                                    0 %
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="kt-widget-11__progress" style="margin-top: -5px;">
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Portlet--> 
+                                                </div>
+
+                                            </div>  
+
+                                            <div class="kt-widget-3__content-info" style="margin-top: 0px; color:white; padding-bottom: 0rem !important; font-size: 16px; padding-right: 1rem; padding-left: 1rem;">
+                                            
+
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-lg-5 col-xl-5 order-lg-2 order-xl-1" style="margin-top: 25px !important;">
+                                   
+                                    <div class="kt-widget-3 kt-widget-3--brand">
+                                        <div class="kt-widget-3__content">
+                                            <div class="kt-widget-3__content-info">
+                                                <div class="kt-widget-3__content-section" style="display: flex; justify-content: space-between;">
+                                                    
+                                                    <div class="kt-widget-3__content-section" style="width: 545px;  text-align: center;">
+                                                        <div class="kt-widget-3__content-title" style="font-size: 32px; font-weight: 300;">Statistics</div>
+                                                        <div class="kt-widget-3__content-desc" style="letter-spacing: 1px;">TECHNICAL TEAM</div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>  
+
+
+                                            <div class="kt-widget-3__content-info" style="padding-bottom: 0rem; padding-left: 3rem; padding-right: 3rem;">
+                                                <div class="kt-widget-3__content-section" style="text-align: center;">
+                                                    <button type="button" class="btn btn-success  btn-lg btn-icon btn-circle" style="border:0px; width: 75px; height: 75px;">
+                                                        <span style="font-size: 25px; font-weight: 100;">227</span>
+                                                    </button>
+
+                                                    <div style="margin-top: 15px; width: 100px; font-size: 18px">Passed Test Cases</div>
+                                                </div>
+                                                <div class="kt-widget-3__content-section" style="text-align: center;">
+                                                     <button type="button" class="btn btn-danger  btn-lg btn-icon btn-circle" style="border:0px; width: 75px; height: 75px;">
+                                                        <span style="font-size: 25px; font-weight: 100">67</span>
+                                                    </button>
+
+                                                    <div style="margin-top: 15px; width: 100px; font-size: 18px">Defects Fixed</div>
+                                                </div>
+                                                <div class="kt-widget-3__content-section" style="text-align: center;">
+                                                     <button type="button" class="btn btn-light  btn-lg btn-icon btn-circle" style=" border:0px; width: 75px; height: 75px;">
+                                                        <span style="font-size: 25px; font-weight: 100">9</span>
+                                                    </button>   
+
+                                                    <div style="margin-top: 15px; width: 100px; font-size: 18px">TDD Delivered</div>       
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                    <div class="col-lg-5 col-xl-5 order-lg-2 order-xl-1" style="margin-top: 25px !important;">
+                                        <div class="kt-portlet">
+                                            <div class="kt-portlet__head">
+                                                <div class="kt-portlet__head-label">
+                                                    <h3 class="kt-portlet__head-title">
+                                                        Additional Notes
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <div class="kt-portlet__body">
+                                                <div class="kt-notes">
+                                                    <div class="kt-notes__items">
+                                                        
+                                                        <div class="kt-notes__item" style="padding-bottom: 2rem;"> 
+                                                            <div class="kt-notes__media">
+                                                                <span class="kt-notes__icon">
+                                                                    <i class="flaticon2-line-chart kt-font-success"></i>                                    
+                                                                </span>                               
+                                                            </div>                             
+                                                            <div class="kt-notes__content"> 
+                                                                <div class="kt-notes__section">     
+                                                                    <div class="kt-notes__info">
+                                                                        <a href="#" class="kt-notes__title" style="font-size: 16px; font-weight: 400">
+                                                                            Ahead of plan                                                          
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <span class="kt-notes__body" style="padding-right: 1rem;">                                        
+                                                                    According to our original plan, only <span class="kt-font-success" style="font-weight: 500">4 Functional Sets</span> were supposed to be delivered by this date.
+                                                                </span>  
+                                                            </div>  
+                                                        </div> 
+                                                        <div class="kt-notes__item" style="padding-bottom: 1rem;"> 
+                                                            <div class="kt-notes__media">
+                                                                <span class="kt-notes__icon">
+                                                                    <i class="la la-bug kt-font-danger" style="font-size:30px; margin-left: 2px; margin-top: 2px;"></i>                                    
+                                                                </span>                               
+                                                            </div>                              
+                                                            <div class="kt-notes__content"> 
+                                                                <div class="kt-notes__section">     
+                                                                    <div class="kt-notes__info">
+                                                                        <a href="#" class="kt-notes__title" style="font-size: 16px; font-weight: 400">
+                                                                            No defects affecting execution                                                         
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <span class="kt-notes__body" style="padding-right: 1rem;">                                        
+                                                                    As of now, the current execution of all functional sets is not blocked or affect by defects raised for our technical teams.
+                                                                </span>  
+                                                            </div>                          
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                     </div>  
+
+
+
+                                     <div class="col-lg-5 col-xl-5 order-lg-2 order-xl-1" style="margin-top: 25px !important;">
+                                   
+                                    <div class="kt-widget-3 kt-widget-3--shadow">
+                                        <div class="kt-widget-3__content">
+                                            <div class="kt-widget-3__content-info">
+                                                <div class="kt-widget-3__content-section" style="display: flex; justify-content: space-between;">
+                                                    
+                                                    <div class="kt-widget-3__content-section" style="width: 545px;  text-align: center;">
+                                                        <div class="kt-widget-3__content-title" style="font-size: 32px; font-weight: 300;">Happy Holidays</div>
+                                                        <div class="kt-widget-3__content-desc" style="letter-spacing: 1px;">AWSOME WORK EVERYONE</div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>  
+
+
+                                            <div class="kt-widget-3__content-info" style="padding-bottom: 0rem; padding-left: 3rem; padding-right: 3rem;">
+                                                <div class="kt-widget-3__content-section">
+                                                    <img src="foto.jpg" style="width:465px"/>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                        
+</div>
+
+
+
+
+            </div>
+            <!--end::Row-->
+        <!--end::Dashboard 6-->
+        </div>
+    <!-- end:: Content -->
+    </div>
+
+    <!-- begin:: Footer -->
+    <div class="kt-footer kt-grid__item kt-grid kt-grid--desktop kt-grid--ver-desktop">
+        <div class="kt-container  kt-container--fluid ">
+            <div class="kt-footer__copyright">
+                2019&nbsp;©&nbsp;<a href="#" target="_blank" class="kt-link">App Config, Deloitte</a>
+            </div>
+            <div class="kt-footer__menu">
+                <a href="mailto:jonilourenco@deloitte.pt" target="_blank" class="kt-footer__menu-link kt-link">Contact</a>
+            </div>
+        </div>
+    </div>
+    <!-- end:: Footer -->
+    </div>
+    </div>
+    </div>
+    <!-- end:: Page -->
+
+    <!-- begin:: Scrolltop -->
+    <div id="kt_scrolltop" class="kt-scrolltop">
+        <i class="la la-arrow-up"></i>
+    </div>
+    <!-- end:: Scrolltop -->
+
+    <!-- begin::Global Config(global config for global JS sciprts) -->
+    <script>
+        var KTAppOptions = {
+            "colors": {
+                "state": {
+                    "brand": "#5578eb",
+                    "metal": "#c4c5d6",
+                    "light": "#ffffff",
+                    "accent": "#00c5dc",
+                    "primary": "#5867dd",
+                    "success": "#34bfa3",
+                    "info": "#36a3f7",
+                    "warning": "#ffb822",
+                    "danger": "#fd3995",
+                    "focus": "#9816f4",
+                    "fixed": "rgba(5,170,240,0.3)"
+                },
+                "base": {
+                    "label": [
+                        "#c5cbe3",
+                        "#a1a8c3",
+                        "#3d4465",
+                        "#3e4466"
+                    ],
+                    "shape": [
+                        "#f0f3ff",
+                        "#d9dffa",
+                        "#afb4d4",
+                        "#646c9a"
+                    ]
+                }
+            }
+        };
+    </script>
+    <!-- end::Global Config -->
+
+    <!--begin::Global Theme Bundle(used by all pages) -->
+    <script src="index_files/plugins.js" type="text/javascript"></script>
+    <script src="index_files/scripts.js" type="text/javascript"></script>
+    <!--end::Global Theme Bundle -->
+
+    <!--begin::Page Vendors(used by this page) -->
+    <script src="index_files/fullcalendar.js" type="text/javascript"></script>
+    <!--end::Page Vendors -->
+
+    <!--begin::Page Scripts(used by this page) -->
+    <script src="index_files/staticData.js" type="text/javascript"></script>  
+    <script src="index_files/dashboard.js" type="text/javascript"></script>    
+    <script src="index_files/chartjs-plugin-labels.js" type="text/javascript"></script>
+
+    <!--end::Page Scripts -->
+    </div>
+</body>
+<!-- end::Body -->
+
 </html>

@@ -43,7 +43,18 @@ function JiraRequestModule() {
           },
           body: bodyData
       };
-  }    
+  }
+  
+  this.optionsGET = function(issueId){
+    return {
+      method: 'GET',
+      url: `https://dchelix.atlassian.net/rest/api/3/issue/${issueId}/changelog`,
+      auth: { username: process.env.JIRA_USER, password: process.env.JIRA_API_KEY },
+      headers: {
+        'Accept': 'application/json'
+      }
+    }
+ }
 
   this.getIssuesData = function(issue_number) {
     jql_query = "project = CHK AND issuetype = Bug ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC";
@@ -57,12 +68,16 @@ function JiraRequestModule() {
   
   this.getIssuesDataByFsName = function(fsName, issue_number){
     jql_query = "project = CHK AND issuetype = Bug AND cf[10160] IN (\""+  fsName +"\") ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC";
-    return requestJira(this.options(this.bodyDataConfig(jql_query, issue_number)));
+    return requestJira(this.options(this.bodyDataConfig(jql_query, issue_number))); 
   }
 
   this.getPeriodicIssueData = function(issue_number){
     jql_query = "project = CHK AND issuetype = Bug ORDER BY key DESC, cf[10039] DESC, status ASC, cf[10013] ASC";
     return requestJira(this.options(this.bodyDataConfig(jql_query, issue_number)));
+  }
+
+  this.getIssueChangelogData = function(issueId){
+    return requestJira(this.optionsGET(issueId));
   }
 } 
 
